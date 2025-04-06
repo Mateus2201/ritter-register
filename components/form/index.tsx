@@ -1,0 +1,113 @@
+"use client"
+
+import React, { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import Optionals from "../optionals";
+import UploadImages from "../images-upload";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Label } from "../ui/label";
+
+export default function FormRegister() {
+    return <div className="max-w-4xl mx-auto p-6 space-y-6">
+        <h1 className="text-2xl font-semibold">Novo Veículo</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+                <Input placeholder="Placa" />
+                <div className="flex items-center space-x-2 mt-2">
+                    <Checkbox id="exibePlaca" />
+                    <Label htmlFor="exibePlaca" className="text-sm">Exibe placa</Label>
+                </div>
+            </div>
+            <div>
+                <Input placeholder="Modelo" />
+                <div className="flex items-center space-x-2 mt-2">
+                    <Checkbox id="vendido" />
+                    <Label htmlFor="vendido" className="text-sm">Vendido</Label>
+                </div>
+            </div>
+            <Select>
+                <SelectTrigger><SelectValue placeholder="Fabricante" /></SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="fabricante-a">Fabricante A</SelectItem>
+                    <SelectItem value="fabricante-b">Fabricante B</SelectItem>
+                </SelectContent>
+            </Select>
+
+            <div className="grid grid-cols-2 gap-2">
+                <Input placeholder="Ano Fab." />
+                <Input placeholder="Modelo" />
+            </div>
+
+            <Select>
+                <SelectTrigger><SelectValue placeholder="Combustível" /></SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="gasolina">Gasolina</SelectItem>
+                    <SelectItem value="alcool">Álcool</SelectItem>
+                    <SelectItem value="flex">Flex</SelectItem>
+                    <SelectItem value="diesel">Diesel</SelectItem>
+                </SelectContent>
+            </Select>
+
+            <Input placeholder="Motor" />
+
+            <Select>
+                <SelectTrigger><SelectValue placeholder="Cor" /></SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="preto">Preto</SelectItem>
+                    <SelectItem value="branco">Branco</SelectItem>
+                    <SelectItem value="vermelho">Vermelho</SelectItem>
+                    <SelectItem value="azul">Azul</SelectItem>
+                </SelectContent>
+            </Select>
+
+            <Select>
+                <SelectTrigger><SelectValue placeholder="Tipo do Veículo" /></SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="carro">Carro</SelectItem>
+                    <SelectItem value="moto">Moto</SelectItem>
+                    <SelectItem value="caminhao">Caminhão</SelectItem>
+                </SelectContent>
+            </Select>
+
+            <Input placeholder="Portas" type="number" />
+            <Input placeholder="Lugares" type="number" />
+            <Input placeholder="Quilometragem" type="number" />
+
+            <div className="col-span-2 flex flex-col md:flex-row gap-2 items-center">
+                <Input placeholder="Valor" className="w-full md:w-auto" />
+                <span>+</span>
+                <Input placeholder="Prestações" className="w-full md:w-auto" />
+                <span>de R$</span>
+                <Input placeholder="Valor prestação" className="w-full md:w-auto" />
+                <Checkbox id="exibeValor" defaultChecked className="ml-2" /> <label htmlFor="exibeValor">Exibe valor</label>
+            </div>
+
+            <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
+                    <Checkbox id="aceitaPropostas" defaultChecked />
+                    <Label htmlFor="aceitaPropostas">Aceita propostas</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <Checkbox id="aceitaTroca" defaultChecked />
+                    <Label htmlFor="aceitaTroca">Aceita troca</Label>
+                </div>
+            </div>
+
+            <div className="col-span-2">
+                <Textarea placeholder="Observações do Vendedor" />
+            </div>
+        </div>
+        <Optionals />
+        <UploadImages />
+        <Button className="mt-6">Salvar Veículo</Button>
+    </div>
+}
