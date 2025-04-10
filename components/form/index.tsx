@@ -17,7 +17,7 @@ import {
 import { Label } from "../ui/label";
 
 export default function FormRegister() {
-    return <div className="max-w-4xl mx-auto p-6 space-y-6">
+    return <div className="max-w-4xl mx-auto p-6 space-y-6 h-min-screen">
         <h1 className="text-2xl font-semibold">Novo Veículo</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -35,7 +35,8 @@ export default function FormRegister() {
                 </div>
             </div>
             <Select>
-                <SelectTrigger><SelectValue placeholder="Fabricante" /></SelectTrigger>
+                <SelectTrigger className="w-full">
+                <SelectValue placeholder="Fabricante" /></SelectTrigger>
                 <SelectContent>
                     <SelectItem value="fabricante-a">Fabricante A</SelectItem>
                     <SelectItem value="fabricante-b">Fabricante B</SelectItem>
@@ -48,7 +49,7 @@ export default function FormRegister() {
             </div>
 
             <Select>
-                <SelectTrigger><SelectValue placeholder="Combustível" /></SelectTrigger>
+                <SelectTrigger className="w-full"><SelectValue placeholder="Combustível" /></SelectTrigger>
                 <SelectContent>
                     <SelectItem value="gasolina">Gasolina</SelectItem>
                     <SelectItem value="alcool">Álcool</SelectItem>
@@ -60,7 +61,7 @@ export default function FormRegister() {
             <Input placeholder="Motor" />
 
             <Select>
-                <SelectTrigger><SelectValue placeholder="Cor" /></SelectTrigger>
+                <SelectTrigger className="w-full"><SelectValue placeholder="Cor" /></SelectTrigger>
                 <SelectContent>
                     <SelectItem value="preto">Preto</SelectItem>
                     <SelectItem value="branco">Branco</SelectItem>
