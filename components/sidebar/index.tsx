@@ -21,36 +21,26 @@ const items = [
 		icon: Home,
 	},
 	{
-		title: "Inbox",
+		title: "Opcionais",
 		url: "#",
 		icon: Inbox,
 	},
 	{
-		title: "Calendar",
+		title: "Veiculos",
 		url: "#",
 		icon: Calendar,
-	},
-	{
-		title: "Search",
-		url: "#",
-		icon: Search,
-	},
-	{
-		title: "Settings",
-		url: "#",
-		icon: Settings,
-	},
+	}
 ]
 
 export function AppSidebar() {
-	return <div className="sticky top-0 h-screen w-60">
-		<Sidebar>
-			<SidebarContent>
-				<SidebarGroup>
-					<SidebarGroupLabel>Application</SidebarGroupLabel>
-					<SidebarGroupContent>
-						<SidebarMenu>
-							{items.map((item) => (
+	return <Sidebar>
+		<SidebarContent>
+			<SidebarGroup>
+				<SidebarGroupLabel>Application</SidebarGroupLabel>
+				<SidebarGroupContent>
+					<SidebarMenu>
+						{items
+							.map(item => (
 								<SidebarMenuItem key={item.title}>
 									<SidebarMenuButton asChild>
 										<Link href={item.url}>
@@ -60,21 +50,16 @@ export function AppSidebar() {
 									</SidebarMenuButton>
 								</SidebarMenuItem>
 							))}
-						</SidebarMenu>
-					</SidebarGroupContent>
-				</SidebarGroup>
-			</SidebarContent>
-		</Sidebar>
-	</div>
-
+					</SidebarMenu>
+				</SidebarGroupContent>
+			</SidebarGroup>
+		</SidebarContent>
+	</Sidebar>
 }
 
-export default function SidebarComponent({ children }: { children: React.ReactNode }) {
-	return <SidebarProvider>
+export default function SidebarComponent() {
+	return <SidebarProvider className="absolute">
 		<AppSidebar />
-		<main>
-			<SidebarTrigger />
-			{children}
-		</main>
+		<SidebarTrigger />
 	</SidebarProvider>
 }
