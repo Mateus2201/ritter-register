@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import publicApi from '@/src/services/publicApi'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -10,7 +9,7 @@ import AlertComponent from '@/components/alert'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import DialogType from '@/@types/dialogs'
 
 const formSchema = z.object({
@@ -34,7 +33,6 @@ const formSchema = z.object({
 })
 
 export default function RegisterComponent() {
-    const router = useRouter()
     const [loading, setLoading] = useState<boolean>(false)
     const [propsRegister, setPropsRegister] = useState<DialogType>()
 

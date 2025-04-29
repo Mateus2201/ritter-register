@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -15,8 +15,30 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Label } from "../ui/label";
+import publicApi from "@/src/services/publicApi";
+import { redirect } from "next/navigation";
+import { jwtDecode } from 'jwt-decode'
 
 export default function FormRegister() {
+
+    useEffect(() => {
+
+        const token = localStorage.getItem('token')
+        console.log('Token tentando!');
+
+        const payload = jwtDecode(token? token : ''); // usando jwt-decode no front
+        console.log(payload); // 'admin' ou 'user'
+
+        publicApi.get("/colors")
+            .then((res) => {
+                console.log(res.data)
+            })
+            .catch((err) => {
+                console.log(err);
+                console.log("Acesso negado! Redirecionando...");
+            });
+    }, []);
+
     return <div className="container  bg-background text-white max-w-4xl mx-auto p-6 space-y-6 h-min-screen">
         <h1 className="text-2xl font-semibold">Novo Veículo</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -36,7 +58,7 @@ export default function FormRegister() {
             </div>
             <Select>
                 <SelectTrigger className="w-full">
-                <SelectValue placeholder="Fabricante" /></SelectTrigger>
+                    <SelectValue placeholder="Fabricante" /></SelectTrigger>
                 <SelectContent>
                     <SelectItem value="fabricante-a">Fabricante A</SelectItem>
                     <SelectItem value="fabricante-b">Fabricante B</SelectItem>

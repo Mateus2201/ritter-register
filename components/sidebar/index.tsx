@@ -1,5 +1,5 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react"
+import { Calendar, Home, Inbox, LogOut, Search, Settings } from "lucide-react"
 
 import {
 	Sidebar,
@@ -12,44 +12,58 @@ import {
 	SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
+import { Button } from "../ui/button"
+import React from "react"
 
-// Menu items.
-const items = [
-	{
-		title: "Home",
-		url: "#",
-		icon: Home,
-	},
-	{
-		title: "Opcionais",
-		url: "#",
-		icon: Inbox,
-	},
-	{
-		title: "Veiculos",
-		url: "#",
-		icon: Calendar,
-	}
-]
+interface MenuItem {
+	title: string
+	url: string
+	className?: string
+	icon: React.ElementType
+}
 
 export function AppSidebar() {
+
+	const items: MenuItem[] = [
+		{
+			title: "Home",
+			url: "#",
+			icon: Home,
+		},
+		{
+			title: "Opcionais",
+			url: "#",
+			icon: Inbox,
+		},
+		{
+			title: "Veiculos",
+			url: "#",
+			icon: Calendar,
+		},
+		{
+			title: "Sair",
+			url: "#",
+			icon: LogOut,
+			className: "mt-auto absolute bottom-5",
+		},
+	]
+
 	return <Sidebar>
 		<SidebarContent>
-			<SidebarGroup>
+			<SidebarGroup className="border-0 h-full">
 				<SidebarGroupLabel>Application</SidebarGroupLabel>
 				<SidebarGroupContent>
 					<SidebarMenu>
-						{items
-							.map(item => (
-								<SidebarMenuItem key={item.title}>
-									<SidebarMenuButton asChild>
-										<Link href={item.url}>
-											<item.icon />
-											<span>{item.title}</span>
-										</Link>
-									</SidebarMenuButton>
-								</SidebarMenuItem>
-							))}
+						{items.map(({ title, url, className, icon }) => (
+							<SidebarMenuItem key={title} className={className} >
+								<SidebarMenuButton tooltip={title} className="flex items-center gap-2">
+									{/* <Link href={url}> */}
+										{React.createElement(icon)}
+										<span>{title}</span>
+									{/* </Link> */}
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+						))}
 					</SidebarMenu>
 				</SidebarGroupContent>
 			</SidebarGroup>
@@ -58,7 +72,7 @@ export function AppSidebar() {
 }
 
 export default function SidebarComponent() {
-	return <SidebarProvider className="absolute">
+	return <SidebarProvider className="absolute text-primary w-0 border-2">
 		<AppSidebar />
 		<SidebarTrigger />
 	</SidebarProvider>
