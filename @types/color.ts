@@ -1,10 +1,10 @@
-type Color  = {
-   idcor: number;
-   descricao: string;
-   data_cadastro: Date;
-   login_cadastro: string;
-   data_ultima_alteracao: Date;
-   login_ultima_alteracao: string;
-}
+type Color = {
+  idColor: number;
+  description: string;
+  createdAt: Date;
+  createdBy: string;
+  updatedAt: Date | null;
+  updatedBy: string | null;
+};
 
 export default Color;

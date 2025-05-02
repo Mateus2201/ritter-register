@@ -1,9 +1,9 @@
-type Session  = {
-   session_id: string;
-   ip_address: string;
-   user_agent: string;
-   last_activity: number;
-   user_data: string;
-}
+type Session = {
+  sessionId: number;
+  ipAddress: string;
+  userAgent: string;
+  lastActivity: number;
+  userData: string;
+};
 
 export default Session;

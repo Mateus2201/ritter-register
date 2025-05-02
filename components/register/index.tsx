@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import publicApi from '@/src/services/publicApi'
+import publicApi from '@/lib/public-api'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import AlertComponent from '@/components/alert'
@@ -19,7 +19,7 @@ const formSchema = z.object({
         message: "Nome deve ter no máximo 20 caracteres",
     }),
 
-    login: z.string().min(6, {
+    username: z.string().min(6, {
         message: "Login deve ter pelo menos 2 caracteres",
     }).max(20, {
         message: "Login deve ter no máximo 20 caracteres",
@@ -39,17 +39,25 @@ export default function RegisterComponent() {
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "", login: "", password: "",
+            name: "", username: "", password: "",
         },
     })
 
+    const resetForm = () => {
+        form.reset({
+            name: "",
+            username: "",
+            password: "",
+        })
+    }
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        const { name, login, password } = values;
+        const { name, username, password } = values;
 
         setLoading(true)
         setPropsRegister({ ...propsRegister, open: false })
 
-        publicApi.post("/auth/register", { name, login, password, })
+        publicApi.post("/auth/register", { name, username, password, })
             .then((res) => {
                 const { token } = res.data
 
@@ -63,6 +71,8 @@ export default function RegisterComponent() {
                     confirmButton: true,
                     open: true,
                 })
+
+                
             }).catch(() => {
                 setPropsRegister({
                     title: 'Cadastro sem sucesso!',
@@ -74,6 +84,7 @@ export default function RegisterComponent() {
                 })
             }).finally(() => {
                 setLoading(false)
+                resetForm()
             })
     }
 
@@ -102,7 +113,7 @@ export default function RegisterComponent() {
             />
             <FormField
                 control={form.control}
-                name="login"
+                name="username"
                 render={({ field }) => (
                     <FormItem>
                         <FormLabel>Login</FormLabel>

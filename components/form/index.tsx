@@ -15,47 +15,32 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Label } from "../ui/label";
-import publicApi from "@/src/services/publicApi";
-import { redirect } from "next/navigation";
-import { jwtDecode } from 'jwt-decode'
+import { useColors } from "@/hooks/use-colors";
+import CheckboxComponent from "../checkbox";
 
 export default function FormRegister() {
+    const { getAllColors } = useColors();
+
+    const fetchColors = async () => {
+        try {
+            const colors = await getAllColors({});
+            console.log('colors', colors)
+        } catch (error) {
+            console.error('Erro ao buscar cores:', error)
+        }
+    }
 
     useEffect(() => {
-
-        const token = localStorage.getItem('token')
-        console.log('Token tentando!');
-
-        const payload = jwtDecode(token? token : ''); // usando jwt-decode no front
-        console.log(payload); // 'admin' ou 'user'
-
-        publicApi.get("/colors")
-            .then((res) => {
-                console.log(res.data)
-            })
-            .catch((err) => {
-                console.log(err);
-                console.log("Acesso negado! Redirecionando...");
-            });
-    }, []);
+        fetchColors()
+    }, [])
 
     return <div className="container  bg-background text-white max-w-4xl mx-auto p-6 space-y-6 h-min-screen">
         <h1 className="text-2xl font-semibold">Novo Veículo</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-                <Input placeholder="Placa" />
-                <div className="flex items-center space-x-2 mt-2">
-                    <Checkbox id="exibePlaca" />
-                    <Label htmlFor="exibePlaca" className="text-sm">Exibe placa</Label>
-                </div>
-            </div>
-            <div>
-                <Input placeholder="Modelo" />
-                <div className="flex items-center space-x-2 mt-2">
-                    <Checkbox id="vendido" />
-                    <Label htmlFor="vendido" className="text-sm">Vendido</Label>
-                </div>
-            </div>
+            <CheckboxComponent label="Exibe placa" id="exibePlaca"  isChecked />
+            <CheckboxComponent label="Vendido" id="Vendido"  isChecked />
+            
+            
             <Select>
                 <SelectTrigger className="w-full">
                     <SelectValue placeholder="Fabricante" /></SelectTrigger>

@@ -1,12 +1,9 @@
-type Optional = {
-  idOptional: number;
-  name: string;
-  idOptionalType: number;
+type VehicleType = {
   idVehicleType: number;
+  description: string;
   createdAt: Date;
   createdBy: string;
   updatedAt: Date;
   updatedBy: string;
 };
-
-export default Optional;
+export default VehicleType;

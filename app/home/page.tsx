@@ -4,6 +4,6 @@ import React from 'react'
 
 export default function PageHome() {
   return <PrivateRoute>
-    <FormRegister />
+    <FormRegister /> 
   </PrivateRoute>
 }

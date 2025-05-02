@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import publicApi from '@/src/services/publicApi' // onde você configurou o axios
+import publicApi from '@/lib/public-api' // onde você configurou o axios
 
 interface AuthContextType {
   token: string | null

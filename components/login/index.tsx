@@ -4,8 +4,8 @@ import { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
-import publicApi from '@/src/services/publicApi'
-import { useAuth } from '@/src/contexts/AuthContext'
+import publicApi from '@/lib/public-api'
+import { useAuth } from '@/src/contexts/auth-context'
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { useForm } from "react-hook-form"
@@ -14,7 +14,7 @@ import DialogType from '@/@types/dialogs'
 import AlertComponent from '../alert'
 
 const formSchema = z.object({
-    name: z.string().min(6, {
+    username: z.string().min(6, {
         message: "Nome deve ter pelo menos 2 caracteres",
     }).max(20, {
         message: "Nome deve ter no máximo 20 caracteres",
@@ -29,36 +29,43 @@ const formSchema = z.object({
 export default function LoginComponent() {
     const [loading, setLoading] = useState(false)
     const router = useRouter()
-    const { setToken } = useAuth() 
+    const { setToken } = useAuth()
     const [propsRegister, setPropsRegister] = useState<DialogType>()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            name: "", password: "",
+            username: "", password: "",
         },
     })
 
+    const resetForm = () => {
+        form.reset({
+            username: "",
+            password: "",
+        })
+    }
+
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        const { name, password } = values;
+        const { username, password } = values;
 
         setLoading(true)
         setPropsRegister({ ...propsRegister, open: false })
 
         publicApi
-            .post("/auth/login", { identifier: name, password: password, })
+            .post("/auth/login", { username, password })
             .then((res) => {
                 const { token } = res.data
 
                 localStorage.setItem('token', token)
-                setToken(token) 
+                setToken(token)
 
                 router.push('/home')
             })
             .catch(() => {
                 setPropsRegister({
                     title: 'Login sem sucesso!',
-                    description: 'Tente Novamente...',
+                    description: 'Senha ou login inválido. Tente novamente!',
                     cancel: () => setPropsRegister({ ...propsRegister, open: false }),
                     cancelText: 'OK',
                     cancelButton: true,
@@ -67,6 +74,7 @@ export default function LoginComponent() {
             })
             .finally(() => {
                 setLoading(false)
+                resetForm()
             })
     }
 
@@ -76,10 +84,10 @@ export default function LoginComponent() {
             <AlertComponent {...propsRegister} />
             <FormField
                 control={form.control}
-                name="name"
+                name="username"
                 render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Nome</FormLabel>
+                        <FormLabel>Login</FormLabel>
                         <FormControl>
                             <Input
                                 type="text"
