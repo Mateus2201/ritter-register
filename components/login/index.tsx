@@ -10,7 +10,7 @@ import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { useForm } from "react-hook-form"
 import { zodResolver } from '@hookform/resolvers/zod'
-import DialogType from '@/@types/dialogs'
+import DialogType from '@/types/dialogs'
 import AlertComponent from '../alert'
 
 const formSchema = z.object({
@@ -79,7 +79,7 @@ export default function LoginComponent() {
     }
 
     return <Form {...form} >
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 p-4 h-screen max-w-md mx-auto ">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="flex  flex-col gap-4 p-4 h-screen max-w-md mx-auto ">
             <h1 className="text-2xl font-bold text-center">Cadastro</h1>
             <AlertComponent {...propsRegister} />
             <FormField
@@ -93,7 +93,7 @@ export default function LoginComponent() {
                                 type="text"
                                 placeholder="Nome de usuário"
                                 required
-                                className="border p-2 rounded"
+                                className=""
                                 {...field}
                             />
                         </FormControl>
@@ -123,7 +123,7 @@ export default function LoginComponent() {
             <Button
                 type="submit"
                 disabled={loading}
-                className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+                className="bg-blue-800 text-white p-2 rounded hover:bg-blue-700"
             >
                 {loading ? 'Acessando...' : 'Acessar'}
             </Button>

@@ -3,8 +3,8 @@ import RegisterComponent from '@/components/register'
 import React from 'react'
 
 export default function EntryPage() {
-    return <main className="bg-gray-400 w-screen h-screen flex items-center justify-center">
-        <div className="flex  items-center justify-center gap-4 grid-cols-2 p-4 h-screen  mx-auto">
+    return <main className="w-screen h-screen flex items-center justify-center">
+        <div className="flex items-center justify-center gap-4 grid-cols-2 p-4 h-screen  mx-auto">
             <div className='h-1/2 w-[30vw] '>
                 <LoginComponent />
             </div>
@@ -12,7 +12,5 @@ export default function EntryPage() {
                 <RegisterComponent />
             </div>
         </div>
-        {/* <div className="text-2xl text-primary">Entry Page</div>
-        <div className="text-2xl text-primary">Welcome to the Entry Page</div> */}
     </main>
 }

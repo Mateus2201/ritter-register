@@ -24,12 +24,9 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return <html lang="pt-BR">
-		<body className={`${geistSans.variable} ${geistMono.variable} antialiased `}>
+		<body className={`${geistSans.variable} ${geistMono.variable} antialiased  `}>
 			<AuthProvider>
-				<aside>
-					<SidebarComponent />
-				</aside>
-				<main className="flex-1 bg-offWhite text-primary">
+				<main className="flex-1 bg-dark text-text-white h-min-screen h-screen">
 					{children}
 				</main>
 			</AuthProvider>

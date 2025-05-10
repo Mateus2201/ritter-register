@@ -1,4 +1,4 @@
-import DialogType from "@/@types/dialogs"
+import DialogType from "@/types/dialogs"
 import {
     AlertDialog,
     AlertDialogAction,

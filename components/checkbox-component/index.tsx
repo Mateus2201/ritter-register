@@ -11,16 +11,7 @@ interface CheckboxComponentProps {
 
 export default function CheckboxComponent({ label, id, onChange, isChecked }: CheckboxComponentProps) {
     return <div className="flex items-center space-x-2 mt-2">
-        <Checkbox id={id} checked={isChecked} onCheckedChange={onChange} />
-        <Label htmlFor={id} className="text-sm">{label}</Label>
+        <Checkbox id={id} checked={isChecked} onCheckedChange={onChange} className='text-white'/>
+        <Label htmlFor={id} className="text-sm text-white">{label}</Label>
     </div>
-
-
-    // return <div>
-    //     <Input placeholder="Placa" />
-    //     <div className="flex items-center space-x-2 mt-2">
-    //         <Checkbox id="exibePlaca" />
-    //         <Label htmlFor="exibePlaca" className="text-sm">Exibe placa</Label>
-    //     </div>
-    // </div>
 }

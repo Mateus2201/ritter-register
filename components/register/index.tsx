@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
-import DialogType from '@/@types/dialogs'
+import DialogType from '@/types/dialogs'
 
 const formSchema = z.object({
     name: z.string().min(6, {
@@ -107,7 +107,7 @@ export default function RegisterComponent() {
                                 {...field}
                             />
                         </FormControl>
-                        <FormMessage className='text-red' />
+                        <FormMessage className='text-md text-red-700' />
                     </FormItem>
                 )}
             />
@@ -152,7 +152,7 @@ export default function RegisterComponent() {
             <Button
                 type="submit"
                 disabled={loading}
-                className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+                className="bg-blue-800 text-white p-2 rounded hover:bg-blue-700"
             >
                 {loading ? 'Cadastrando...' : 'Cadastrar'}
             </Button>

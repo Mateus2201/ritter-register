@@ -72,7 +72,7 @@ export function AppSidebar() {
 }
 
 export default function SidebarComponent() {
-	return <SidebarProvider className="absolute text-primary w-0 border-2">
+	return <SidebarProvider className="absolute w-0 border-2">
 		<AppSidebar />
 		<SidebarTrigger />
 	</SidebarProvider>

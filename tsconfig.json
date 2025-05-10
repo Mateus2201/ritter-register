@@ -30,7 +30,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "**/*.tsx",
-    "@types"
+    "types"
   ],
   "exclude": ["node_modules"]
 }
