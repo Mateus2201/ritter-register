@@ -1,5 +1,5 @@
-type OptionalType = {
-  idOptionalType: number;
+type OptionalCategory = {
+  idOptionalCategory: number;
   description: string;
   createdAt: Date;
   createdBy: string;
@@ -7,4 +7,4 @@ type OptionalType = {
   updatedBy: string | null;
 };
 
-export default OptionalType;
+export default OptionalCategory;
