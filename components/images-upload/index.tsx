@@ -62,7 +62,7 @@ export default function UploadImages() {
         }
     };
 
-    return <div className="pt-6 border-t">
+    return <div className="p-5 ">
         <h2 className="text-xl font-medium mb-2">Imagens do Veículo</h2>
         <div className="flex flex-col md:flex-row gap-4 items-start md:items-end">
             <Input
@@ -85,7 +85,6 @@ export default function UploadImages() {
                 <Checkbox id="destaque" />
                 <label htmlFor="destaque">Destaque página inicial</label>
             </div>
-            <Button>Adicionar</Button>
         </div>
 
         {images.length > 0 && (

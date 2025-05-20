@@ -3,15 +3,12 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SidebarComponent from "@/components/sidebar";
 import { AuthProvider } from "@/src/contexts/auth-context";
+import { Share_Tech } from "next/font/google";
 
-const geistSans = Geist({
-	variable: "--font-geist-sans",
+const shareTech = Share_Tech({
+	variable: "--font-share-tech",
 	subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-	variable: "--font-geist-mono",
-	subsets: ["latin"],
+	weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -24,12 +21,12 @@ export default function RootLayout({
 	children: React.ReactNode;
 }>) {
 	return <html lang="pt-BR">
-		<body className={`${geistSans.variable} ${geistMono.variable} antialiased  `}>
-			<AuthProvider>
-				<main className="flex-1 bg-dark text-text-white h-min-screen h-screen">
+		<body className={`${shareTech.variable} ${shareTech.variable} antialiased  `}>
+			<main className="flex bg-white">
+				<AuthProvider>
 					{children}
-				</main>
-			</AuthProvider>
+				</AuthProvider>
+			</main>
 		</body>
 	</html >
 }

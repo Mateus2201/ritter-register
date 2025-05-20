@@ -6,7 +6,6 @@ import {
     SelectTrigger,
     SelectValue
 } from '../ui/select'
-import { SelectGroup, SelectLabel } from '@radix-ui/react-select'
 
 interface Option {
     value: number
@@ -31,10 +30,10 @@ export default function SelectComponent({
     className
 }: SelectComponentProps) {
     return <Select onValueChange={onChange} value={value}>
-        <SelectTrigger className="w-full text-white">
+        <SelectTrigger className="w-full ">
             <SelectValue placeholder={label} /> {/* usa o label como placeholder */}
         </SelectTrigger>
-        <SelectContent className='z-10 bg-dark text-white'>
+        <SelectContent className='z-10 bg-gray-300'>
             {dataValue?.map((item) => (
                 <SelectItem key={item.value} value={item.description}>
                     {item.description}

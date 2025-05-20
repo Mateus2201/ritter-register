@@ -5,7 +5,7 @@ export function useColors() {
   const getAllColors = async (data: any) => {
     try {
       const response = await publicApi.get("/colors", { params: data });
-      return response.data as Color[] || [];
+      return (response.data as Color[]) || [];
     } catch (error) {
       console.error("Error fetching colors:", error);
       throw error;

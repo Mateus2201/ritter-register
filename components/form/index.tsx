@@ -1,279 +1,236 @@
-"use client"
-
-import React, { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Button } from "@/components/ui/button";
-import Optionals from "../optionals";
-import UploadImages from "../images-upload";
-import { Label } from "../ui/label";
-
-import CheckboxComponent from "../checkbox-component";
-import SelectComponent from "../select-component";
+'use client'
 
 import Color from "@/types/Color";
-import Manufacturer from "@/types/Manufacturer";
-
-import { useManufacturer } from "@/hooks/use-manufacturer";
+import UploadImages from "../images-upload";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useColors } from "@/hooks/use-colors";
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-
-const schema = z.object({
-    licensePlate: z.string().min(7, "Placa inválida"),
-    licensePlateDisplay: z.boolean().optional(),
-    featured: z.boolean().optional(),
-    sold: z.boolean().optional(),
-
-    model: z.string().min(2, "Informe o modelo"),
-    manufacturingYear: z.number().min(1900, "Ano inválido"),
-    modelYear: z.number().min(1900, "Ano inválido"),
-    fuel: z.string().nonempty("Informe o combustível"),
-
-    engine: z.string().optional(),
-    doorCount: z.number().min(1, "Mínimo 1 porta"),
-    seatCount: z.number().min(1, "Mínimo 1 lugar"),
-
-    mileage: z.number().int().min(-1, "Valor inválido"),
-    price: z.number().nonnegative("Valor inválido"),
-    priceDisplay: z.boolean().optional(),
-    prestacoes: z.number().optional(),
-    installmentValue: z.number().optional(),
-
-    allowsProposal: z.boolean().optional(),
-    allowsTrade: z.boolean().optional(),
-
-    notes: z.string().optional(),
-
-    color: z.string().nonempty("Informe a cor"),
-    manufacturer: z.string().nonempty("Selecione o fabricante"),
-    vehicleType: z.string().nonempty("Informe o tipo"),
-
-
-    // Extras podem ser adicionados depois: opcionais e imagens
-})
-
-type FormData = z.infer<typeof schema>
+import Manufacturer from "@/types/Manufacturer";
+import { Button } from "@/components/ui/button";
+import SelectComponent from "../select-component";
+import React, { useEffect, useState } from "react";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Textarea } from "@/components/ui/textarea";
+import { FormDataCar } from "@/schema-forms/form-car";
+import { useManufacturer } from "@/hooks/use-manufacturer";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 
 export default function FormRegister() {
     const { getAllColors } = useColors();
     const { getAllManufacturer } = useManufacturer();
-    const [useColor, setUseColor] = useState<Color[]>([])
-    const [selectedColor, setSelectedColor] = useState<Color | null>()
+    const [useColor, setUseColor] = useState<Color[]>([]);
+    const [useManufacturers, setManufacturer] = useState<Manufacturer[]>([]);
 
-    const [useManufacturers, setManufacturer] = useState<Manufacturer[]>([])
-    const [selectedManufacturer, setSelectedManufacturer] = useState<Manufacturer | null>()
+    const { useSetForm, schemaCar } = FormDataCar()
 
-    const form = useForm<FormData>({
-        resolver: zodResolver(schema),
-        defaultValues: {
-            licensePlate: "",
-            model: "",
-            manufacturer: "",
-            manufacturingYear: new Date().getFullYear(),
-            modelYear: new Date().getFullYear(),
-            fuel: "",
-            engine: "",
-            color: "",
-            vehicleType: "",
-            doorCount: 4,
-            seatCount: 5,
-            mileage: 0,
-            price: 0,
-            prestacoes: 0,
-            installmentValue: 0,
-            notes: "",
-        },
-    })
-
-    function onSubmit(data: FormData) {
-        console.log("Dados:", data)
-    }
-
-    const fetchColors = async () => {
-        try {
-            const colors = await getAllColors({});
-            setUseColor(colors)
-        } catch (error) {
-            console.error('Erro ao buscar cores:', error)
-        }
-    }
-
-    const resetForm = () => {
-        form.reset({
-            licensePlate: "",
-            model: "",
-            manufacturer: "",
-            manufacturingYear: new Date().getFullYear(),
-            modelYear: new Date().getFullYear(),
-            fuel: "",
-            engine: "",
-            color: "",
-            vehicleType: "",
-            doorCount: 4,
-            seatCount: 5,
-            mileage: 0,
-            price: 0,
-            prestacoes: 0,
-            installmentValue: 0,
-            notes: "",
-        })
-    }
-
-    const fetchManufacturer = async () => {
-        try {
-            const manufacturer = await getAllManufacturer({});
-            setManufacturer(manufacturer)
-        } catch (error) {
-            console.error('Erro ao buscar cores:', error)
-        }
+    function onSubmit(data: any) {
+        // Replace 'any' with the actual type, e.g. FormDataCarType
+        console.log("Dados:", data);
     }
 
     useEffect(() => {
-        fetchColors();
-        fetchManufacturer();
-    }, [])
+        getAllColors({})
+            .then(setUseColor)
+            .catch(console.error);
+        getAllManufacturer({})
+            .then(setManufacturer)
+            .catch(console.error);
+    }, []);
 
-    const handleColorChange = (value: string) => {
-        const selected = useColor.find(color => color.description === value);
-        setSelectedColor(selected || null);
-    }
+    return <div className="min-h-screen w-screen bg-gradient-to-br flex items-center justify-center from-[#464646] via-[#626464] to-[#6f6f6f] py-16">
+        <div className="max-w-7xl mx-auto px-6 w-3/4">
+            <Form {...useSetForm}>
+                <form onSubmit={useSetForm.handleSubmit(onSubmit)} className="grid gap-12">
+                    <Card className="shadow-lg border border-blue-200 bg-[#f8f8f8]">
+                        <CardHeader className="bg-indigo-50">
+                            <CardTitle className="text-3xl text-center text-[#626464]">CADASTRO DE VEICULO</CardTitle>
+                        </CardHeader>
+                        <CardContent className="grid gap-10 md:grid-cols-2 p-8">
+                            <div className="space-y-6">
+                                <h2 className="text-xl font-semibold text-[#626464]">INFORMAÇÕES BÁSICAS</h2>
+                                <FormField control={useSetForm.control} name="licensePlate" render={({ field }) => (
+                                    <FormItem>
+                                        <Label>Placa</Label>
+                                        <FormControl><Input placeholder="Placa" {...field} /></FormControl>
+                                        <FormMessage className="text-red-500" />
+                                    </FormItem>
+                                )} />
+                                <FormField control={useSetForm.control} name="model" render={({ field }) => (
+                                    <FormItem>
+                                        <Label>Modelo</Label>
+                                        <FormControl><Input placeholder="Modelo" {...field} /></FormControl>
+                                        <FormMessage className="text-red-500" />
+                                    </FormItem>
+                                )} />
+                                <FormField control={useSetForm.control} name="manufacturer" render={({ field }) => (
+                                    <FormItem>
+                                        <Label>Fabricante</Label>
+                                        <FormControl>
+                                            <SelectComponent
+                                                label="Fabricante"
+                                                id="fabricante"
+                                                onChange={field.onChange}
+                                                value={field.value}
+                                                dataValue={useManufacturers.map((m) => ({ value: m.idManufacturer, description: m.name }))}
+                                            />
+                                        </FormControl>
+                                        <FormMessage className="text-red-500" />
+                                    </FormItem>
+                                )} />
+                                <FormField control={useSetForm.control} name="color" render={({ field }) => (
+                                    <FormItem>
+                                        <Label>Cor</Label>
+                                        <FormControl>
+                                            <SelectComponent
+                                                label="Cor"
+                                                id="cor"
+                                                onChange={field.onChange}
+                                                value={field.value}
+                                                dataValue={useColor.map((c) => ({ value: c.idColor, description: c.description }))}
+                                            />
+                                        </FormControl>
+                                        <FormMessage className="text-red-500" />
+                                    </FormItem>
+                                )} />
+                            </div>
+                            <div className="space-y-6">
+                                <h2 className="text-xl font-semibold text-[#626464]">CARACTERÍSTICA</h2>
+                                <FormField control={useSetForm.control} name="fuel" render={({ field }) => (
+                                    <FormItem>
+                                        <Label>Combustível</Label>
+                                        <FormControl>
+                                            <SelectComponent
+                                                label="Combustível"
+                                                id="combustivel"
+                                                onChange={field.onChange}
+                                                value={field.value}
+                                                dataValue={[
+                                                    { value: 1, description: "Gasolina" },
+                                                    { value: 2, description: "Álcool" },
+                                                    { value: 3, description: "Flex" },
+                                                    { value: 4, description: "Diesel" },
+                                                ]}
+                                            />
+                                        </FormControl>
+                                        <FormMessage className="text-red-500" />
+                                    </FormItem>
+                                )} />
+                                <FormField control={useSetForm.control} name="vehicleType" render={({ field }) => (
+                                    <FormItem>
+                                        <Label>Tipo de Veículo</Label>
+                                        <FormControl>
+                                            <SelectComponent
+                                                label="Tipo de Veículo"
+                                                id="tipoVeiculo"
+                                                onChange={field.onChange}
+                                                value={field.value}
+                                                dataValue={[
+                                                    { value: 1, description: "Carro" },
+                                                    { value: 2, description: "Moto" },
+                                                    { value: 3, description: "Caminhão" },
+                                                ]}
+                                            />
+                                        </FormControl>
+                                        <FormMessage className="text-red-500" />
+                                    </FormItem>
+                                )} />
+                                <FormField control={useSetForm.control} name="engine" render={({ field }) => (
+                                    <FormItem>
+                                        <Label>Motor</Label>
+                                        <FormControl><Input placeholder="Motor" {...field} /></FormControl>
+                                        <FormMessage className="text-red-500" />
+                                    </FormItem>
+                                )} />
+                            </div>
+                        </CardContent>
+                    </Card>
 
-    const handleManufacturerChange = (value: string) => {
-        const selected = useManufacturers.find(manufacturer => manufacturer.name === value);
-        setSelectedManufacturer(selected || null);
-    }
-
-    const handleCheckboxChange = (checked: boolean) => {
-        console.log(checked)
-    }
-
-    return <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 max-w-md mx-auto">
-            <div className="container max-w-4xl mx-auto p-6 space-y-6 h-min-screen">
-                <h1 className="text-2xl font-semibold">Novo Veículo</h1>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                        control={form.control}
-                        name="licensePlate"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Placa</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="ABC1D23" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    {/* <CheckboxComponent label="Exibe placa" id="exibePlaca" isChecked />
-                    <CheckboxComponent label="Vendido" id="Vendido" isChecked />
-
-
-                    <Input placeholder="Placa" />
-
-                    <div className="grid grid-cols-2 gap-2">
-                        <Input type="number" placeholder="Ano Fab." />
-                        <Input placeholder="Modelo" />
+                    <Card className="shadow-md border border-blue-200 bg-[#f8f8f8]">
+                        <CardHeader className="bg-indigo-50">
+                            <CardTitle className="text-xl text-[#626464]">ESPECIFICAÇÕES TÉCNICAS</CardTitle>
+                        </CardHeader>
+                        <CardContent className="grid md:grid-cols-2 gap-6 p-8">
+                            <FormField key={'manufacturingYear'} control={useSetForm.control} name={'manufacturingYear'} render={({ field }) => (
+                                <FormItem>
+                                    <Label>Ano de Fabricação</Label>
+                                    <FormControl><Input type="number" placeholder={'manufacturingYear'} {...field} /></FormControl>
+                                    <FormMessage className="text-red-500" />
+                                </FormItem>
+                            )} />
+                            <FormField key={'modelYear'} control={useSetForm.control} name={'modelYear'} render={({ field }) => (
+                                <FormItem>
+                                    <Label>Ano do Modelo</Label>
+                                    <FormControl><Input type="number" placeholder={'modelYear'} {...field} /></FormControl>
+                                    <FormMessage className="text-red-500" />
+                                </FormItem>
+                            )} />
+                            <FormField key={'doorCount'} control={useSetForm.control} name={'doorCount'} render={({ field }) => (
+                                <FormItem>
+                                    <Label>Portas</Label>
+                                    <FormControl><Input type="number" placeholder={'Portas'} {...field} /></FormControl>
+                                    <FormMessage className="text-red-500" />
+                                </FormItem>
+                            )} />
+                            <FormField key={'seatCount'} control={useSetForm.control} name={'seatCount'} render={({ field }) => (
+                                <FormItem>
+                                    <Label>Assentos</Label>
+                                    <FormControl><Input type="number" placeholder={'Assentos'} {...field} /></FormControl>
+                                    <FormMessage className="text-red-500" />
+                                </FormItem>
+                            )} />
+                            <FormField control={useSetForm.control} name="mileage" render={({ field }) => (
+                                <FormItem>
+                                    <Label>Quilometragem</Label>
+                                    <FormControl><Input type="number" placeholder="Quilometragem" {...field} /></FormControl>
+                                    <FormMessage className="text-red-500" />
+                                </FormItem>
+                            )} />
+                            <FormField control={useSetForm.control} name="price" render={({ field }) => (
+                                <FormItem>
+                                    <Label>Preço</Label>
+                                    <FormControl><Input type="number" placeholder="Preço" {...field} /></FormControl>
+                                    <FormMessage className="text-red-500" />
+                                </FormItem>
+                            )} />
+                            <FormField control={useSetForm.control} name="prestacoes" render={({ field }) => (
+                                <FormItem>
+                                    <Label>Parcelas</Label>
+                                    <FormControl><Input type="number" placeholder="Parcelas" {...field} /></FormControl>
+                                    <FormMessage className="text-red-500" />
+                                </FormItem>
+                            )} />
+                            <FormField control={useSetForm.control} name="installmentValue" render={({ field }) => (
+                                <FormItem>
+                                    <Label>Valor da Parcela</Label>
+                                    <FormControl><Input type="number" placeholder="Valor da Parcela" {...field} /></FormControl>
+                                    <FormMessage className="text-red-500" />
+                                </FormItem>
+                            )} />
+                        </CardContent>
+                    </Card>
+                    <Card className="shadow-md border border-blue-200 bg-[#f8f8f8]">
+                        <CardHeader className="bg-indigo-50">
+                            <CardTitle className="text-xl text-[#626464]">OBSERVAÇÕES</CardTitle>
+                        </CardHeader>
+                        <CardContent className="p-8">
+                            <FormField control={useSetForm.control} name="notes" render={({ field }) => (
+                                <FormItem>
+                                    <FormControl><Textarea rows={5} placeholder="Observações do vendedor" {...field} /></FormControl>
+                                    <FormMessage className="text-red-500" />
+                                </FormItem>
+                            )} />
+                        </CardContent>
+                    </Card>
+                    <div className="flex justify-end">
+                        <Button type="submit" className="px-10 py-4 text-lg bg-[#626464] hover:bg-[#626464] text-white">Salvar Veículo</Button>
                     </div>
+                    <Card className="shadow-md border mt-5 border-blue-200 bg-[#f8f8f8]">
+                        <UploadImages />
+                    </Card>
+                </form>
+            </Form>
 
-                    <SelectComponent
-                        label="Cor"
-                        id="cor"
-                        onChange={handleColorChange}
-                        value={selectedColor?.description || ""}
-                        dataValue={useColor.map(color => ({
-                            value: color.idColor,
-                            description: color.description
-                        }))}
-                    />
-
-                    <SelectComponent
-                        label="Fabricante"
-                        id="fabricante"
-                        onChange={handleManufacturerChange}
-                        value={selectedManufacturer?.name || ""}
-                        dataValue={useManufacturers.map(manufacturer => ({
-                            value: manufacturer.idManufacturer,
-                            description: manufacturer.name
-                        }))}
-                    /> */}
-
-
-
-                    {/* 
-
-            {/*
-
-            <Select>
-                <SelectTrigger className="w-full"><SelectValue placeholder="Combustível" /></SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="gasolina">Gasolina</SelectItem>
-                    <SelectItem value="alcool">Álcool</SelectItem>
-                    <SelectItem value="flex">Flex</SelectItem>
-                    <SelectItem value="diesel">Diesel</SelectItem>
-                </SelectContent>
-            </Select>
-
-            <Input placeholder="Motor" />
-
-            <Select>
-                <SelectTrigger className="w-full"><SelectValue placeholder="Cor" /></SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="preto">Preto</SelectItem>
-                    <SelectItem value="branco">Branco</SelectItem>
-                    <SelectItem value="vermelho">Vermelho</SelectItem>
-                    <SelectItem value="azul">Azul</SelectItem>
-                </SelectContent>
-            </Select>
-
-            <Select>
-                <SelectTrigger><SelectValue placeholder="Tipo do Veículo" /></SelectTrigger>
-                <SelectContent>
-                    <SelectItem value="carro">Carro</SelectItem>
-                    <SelectItem value="moto">Moto</SelectItem>
-                    <SelectItem value="caminhao">Caminhão</SelectItem>
-                </SelectContent>
-            </Select>
-
-            <Input placeholder="Portas" type="number" />
-            <Input placeholder="Lugares" type="number" />
-            <Input placeholder="Quilometragem" type="number" />
-
-            <div className="col-span-2 flex flex-col md:flex-row gap-2 items-center">
-                <Input placeholder="Valor" className="w-full md:w-auto" />
-                <span>+</span>
-                <Input placeholder="Prestações" className="w-full md:w-auto" />
-                <span>de R$</span>
-                <Input placeholder="Valor prestação" className="w-full md:w-auto" />
-                <Checkbox id="exibeValor" defaultChecked className="ml-2" /> <label htmlFor="exibeValor">Exibe valor</label>
-            </div>
-
-            <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                    <Checkbox id="aceitaPropostas" defaultChecked />
-                    <Label htmlFor="aceitaPropostas">Aceita propostas</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                    <Checkbox id="aceitaTroca" defaultChecked />
-                    <Label htmlFor="aceitaTroca">Aceita troca</Label>
-                </div>
-            </div>
-
-            <div className="col-span-2">
-                <Textarea placeholder="Observações do Vendedor" />
-            </div>
-        <Optionals />
-        <UploadImages />
-        <Button className="mt-6">Salvar Veículo</Button> */}
-                </div>
-
-            </div>
-
-        </form>
-    </Form >
+        </div>
+    </div>
 }
