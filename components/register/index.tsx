@@ -14,8 +14,8 @@ import DialogType from '@/types/dialogs'
 
 const formSchema = z.object({
     name: z.string().min(6, {
-        message: "Nome deve ter pelo menos 2 caracteres",
-    }).max(20, {
+        message: "Nome deve ter pelo menos 6 caracteres",
+    }).max(50, {
         message: "Nome deve ter no máximo 20 caracteres",
     }),
 

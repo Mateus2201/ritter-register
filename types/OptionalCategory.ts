@@ -1,10 +1,10 @@
 type OptionalCategory = {
-  idOptionalCategory: number;
+  idOptionalCategory?: number;
   description: string;
-  createdAt: Date;
-  createdBy: string;
-  updatedAt: Date | null;
-  updatedBy: string | null;
+  createdAt?: Date;
+  createdBy?: string;
+  updatedAt?: Date;
+  updatedBy?: string;
 };
 
 export default OptionalCategory;

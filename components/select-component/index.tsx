@@ -8,7 +8,7 @@ import {
 } from '../ui/select'
 
 interface Option {
-    value: number
+    value: number | string
     description: string
 }
 
@@ -30,16 +30,15 @@ export default function SelectComponent({
     className
 }: SelectComponentProps) {
     return <Select onValueChange={onChange} value={value}>
-        <SelectTrigger className="w-full ">
-            <SelectValue placeholder={label} /> {/* usa o label como placeholder */}
+        <SelectTrigger className={`w-full ${className}`} id={id}>
+            <SelectValue placeholder={label} ></SelectValue>
         </SelectTrigger>
-        <SelectContent className='z-10 bg-gray-300'>
+        <SelectContent className="z-10 bg-white max-h-60 overflow-auto">
             {dataValue?.map((item) => (
-                <SelectItem key={item.value} value={item.description}>
+                <SelectItem key={item.value} value={String(item.value)}>
                     {item.description}
                 </SelectItem>
             ))}
         </SelectContent>
     </Select>
-
 }

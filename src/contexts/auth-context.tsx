@@ -5,78 +5,76 @@ import { useRouter } from 'next/navigation'
 import publicApi from '@/lib/public-api' // onde você configurou o axios
 
 interface AuthContextType {
-  token: string | null
-  setToken: (token: string | null) => void
-  login: (token: string) => void
-  logout: () => void
-  isAuthenticated: boolean
-  loading: boolean;
+	token: string | null
+	setToken: (token: string | null) => void
+	login: (token: string) => void
+	logout: () => void
+	isAuthenticated: boolean
+	loading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType)
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [token, setToken] = useState<string | null>(null)
-  const [loading, setLoading] = useState<boolean>(true);
-  const router = useRouter()
+	const [token, setToken] = useState<string | null>(null)
+	const [loading, setLoading] = useState<boolean>(true);
+	const router = useRouter()
 
-  useEffect(() => {
-    const savedToken = localStorage.getItem('token')
-    console.log('Token tentando!');
+	useEffect(() => {
+		const savedToken = localStorage.getItem('token')
+		console.log('Token tentando!');
 
-    if (savedToken) {
-      validateToken(savedToken)
-      setLoading(false);
-      console.log('Token encontrado!');
-      
+		if (savedToken) {
+			validateToken(savedToken)
+			setLoading(false);
+			console.log('Token encontrado!');
 
-    }else {
-      setLoading(false);
-      logout()
-    }
-  }, [])
+		} else {
+			setLoading(false);
+			logout()
+		}
+	}, [])
 
-  const validateToken = async (token: string) => {
-    try {
-      const res = await publicApi.get('/auth/validate', {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+	const validateToken = async (token: string) => {
+		try {
+			const res = await publicApi.get('/auth/validate', {
+				headers: { Authorization: `Bearer ${token}` },
+			})
 
-      console.log(res);
+			if (res.status === 200) {
+				setToken(token)
+			} else {
+				logout()
+			}
+		} catch (error) {
+			logout()
+		}
+	}
 
-      if (res.status === 200) {
-        setToken(token)
-      } else {
-        logout()
-      }
-    } catch (error) {
-      logout()
-    }
-  }
+	const login = (newToken: string) => {
+		localStorage.setItem('token', newToken)
+		setToken(newToken)
+	}
 
-  const login = (newToken: string) => {
-    localStorage.setItem('token', newToken)
-    setToken(newToken)
-  }
+	const logout = () => {
+		localStorage.removeItem('token')
+		setToken(null)
+		
+		router.push('/entry')
+		console.log('Acesso negado! logout...');
 
-  const logout = () => {
-    localStorage.removeItem('token')
-    setToken(null)
-    router.push('/entry')
-    console.log('Acesso negado! logout...');
+	}
 
-  }
+	const value = {
+		token,
+		setToken,
+		login,
+		logout,
+		isAuthenticated: !!token,
+		loading,
+	}
 
-  const value = {
-    token,
-    setToken,
-    login,
-    logout,
-    isAuthenticated: !!token,
-    loading,
-  }
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
+	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
 export const useAuth = () => useContext(AuthContext)

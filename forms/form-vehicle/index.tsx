@@ -1,22 +1,22 @@
 'use client'
 
 import Color from "@/types/Color";
-import UploadImages from "../images-upload";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useColors } from "@/hooks/use-colors";
 import Manufacturer from "@/types/Manufacturer";
 import { Button } from "@/components/ui/button";
-import SelectComponent from "../select-component";
 import React, { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
+import UploadImages from "@/components/images-upload";
 import { FormDataCar } from "@/schema-forms/form-car";
 import { useManufacturer } from "@/hooks/use-manufacturer";
+import SelectComponent from "@/components/select-component";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
 
-export default function FormRegister() {
+export default function FormVehicle() {
     const { getAllColors } = useColors();
     const { getAllManufacturer } = useManufacturer();
     const [useColor, setUseColor] = useState<Color[]>([]);
@@ -39,7 +39,7 @@ export default function FormRegister() {
     }, []);
 
     return <div className="min-h-screen w-screen bg-gradient-to-br flex items-center justify-center from-[#464646] via-[#626464] to-[#6f6f6f] py-16">
-        <div className="max-w-7xl mx-auto px-6 w-3/4">
+        <div className="max-w-7xl mx-auto px-6 w-screen md:w-3/4">
             <Form {...useSetForm}>
                 <form onSubmit={useSetForm.handleSubmit(onSubmit)} className="grid gap-12">
                     <Card className="shadow-lg border border-blue-200 bg-[#f8f8f8]">

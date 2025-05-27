@@ -1,5 +1,7 @@
+'use client'
+
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { Calendar, Home, Inbox, LogOut, Search, Settings } from "lucide-react"
+import { Calendar, Car, ClipboardList, Factory, Home, Inbox, LogOut, Palette, Search, Settings } from "lucide-react"
 
 import {
 	Sidebar,
@@ -14,6 +16,8 @@ import {
 import Link from "next/link"
 import { Button } from "../ui/button"
 import React from "react"
+import { useRouter } from 'next/navigation'
+
 
 interface MenuItem {
 	title: string
@@ -23,44 +27,52 @@ interface MenuItem {
 }
 
 export function AppSidebar() {
+	const Router = useRouter();
 
 	const items: MenuItem[] = [
 		{
 			title: "Home",
-			url: "#",
+			url: "/home",
 			icon: Home,
-		},
-		{
-			title: "Opcionais",
-			url: "#",
-			icon: Inbox,
-		},
-		{
+		}, {
 			title: "Veiculos",
-			url: "#",
-			icon: Calendar,
-		},
-		{
+			url: "/vehicles",
+			icon: Car,
+		}, {
+			title: "Opcionais",
+			url: "/optionals",
+			icon: ClipboardList,
+		}, {
+			title: "Cores",
+			url: "/colors",
+			icon: Palette,
+		}, {
+			title: "Fabricantes",
+			url: "/manufacturer",
+			icon: Factory,
+		}, {
 			title: "Sair",
 			url: "#",
 			icon: LogOut,
 			className: "mt-auto absolute bottom-5",
 		},
-	]
+	];
 
-	return <Sidebar>
+	return <Sidebar className="bg-white border-r border-blue-200 shadow-md">
 		<SidebarContent>
-			<SidebarGroup className="border-0 h-full">
-				<SidebarGroupLabel>Application</SidebarGroupLabel>
+			<SidebarGroup className="h-full">
+				<SidebarGroupLabel className="text-blue-700 text-lg font-semibold mb-4">Menu</SidebarGroupLabel>
 				<SidebarGroupContent>
 					<SidebarMenu>
 						{items.map(({ title, url, className, icon }) => (
-							<SidebarMenuItem key={title} className={className} >
-								<SidebarMenuButton tooltip={title} className="flex items-center gap-2">
-									{/* <Link href={url}> */}
-										{React.createElement(icon)}
-										<span>{title}</span>
-									{/* </Link> */}
+							<SidebarMenuItem key={title} className={className}>
+								<SidebarMenuButton
+									tooltip={title}
+									className="flex items-center gap-3 text-blue-900 hover:bg-blue-100 p-2 rounded-md"
+									onClick={() => Router.push(url)}
+								>
+									{React.createElement(icon, { className: "w-5 h-5" })}
+									<span className="text-sm font-medium">{title}</span>
 								</SidebarMenuButton>
 							</SidebarMenuItem>
 						))}
