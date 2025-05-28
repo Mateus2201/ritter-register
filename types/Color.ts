@@ -1,6 +1,6 @@
 type Color = {
   idColor?: number;
-  description?: string;
+  description: string;
   createdAt?: Date;
   createdBy?: string;
   updatedAt?: Date | null;

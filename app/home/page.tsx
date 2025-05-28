@@ -7,7 +7,11 @@ import React from 'react'
 export default function PageHome() {
   return <PrivateRoute>
     <SidebarComponent />
-    <FormVehicle />
+    <div className="min-h-screen w-screen bg-gradient-to-br flex items-center justify-center from-[#464646] via-[#626464] to-[#6f6f6f] py-16">
+      <div className="max-w-7xl mx-auto px-6 w-screen md:w-3/4">
+        <FormVehicle />
+      </div>
+    </div>
     {/* <VehicleForm/> */}
   </PrivateRoute>
 }

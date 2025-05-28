@@ -1,7 +1,7 @@
 'use client'
 
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { Calendar, Car, ClipboardList, Factory, Home, Inbox, LogOut, Palette, Search, Settings } from "lucide-react"
+import { Calendar, Car, ChartBarStacked, ClipboardList, Factory, Home, Icon, Inbox, LogOut, Palette, Search, Settings } from "lucide-react"
 
 import {
 	Sidebar,
@@ -23,7 +23,7 @@ interface MenuItem {
 	title: string
 	url: string
 	className?: string
-	icon: React.ElementType
+	icon: React.ReactElement
 }
 
 export function AppSidebar() {
@@ -31,36 +31,41 @@ export function AppSidebar() {
 
 	const items: MenuItem[] = [
 		{
-			title: "Home",
-			url: "/home",
-			icon: Home,
-		}, {
+		// 	title: "Home",
+		// 	url: "/home",
+		// 	icon: <Home size={25} strokeWidth={2} />,
+		// }, {
 			title: "Veiculos",
 			url: "/vehicles",
-			icon: Car,
+			icon: <Car size={25} strokeWidth={2} />,
 		}, {
 			title: "Opcionais",
 			url: "/optionals",
-			icon: ClipboardList,
+			icon: <ClipboardList size={25} strokeWidth={2} />,
 		}, {
 			title: "Cores",
 			url: "/colors",
-			icon: Palette,
+			icon: <Palette size={25} strokeWidth={2} />,
 		}, {
 			title: "Fabricantes",
 			url: "/manufacturer",
-			icon: Factory,
+			icon: <Factory size={25} strokeWidth={2} />,
+		}, {
+			title: "Categorias de Veículos",
+			url: "/category-vehicles",
+			icon: <ChartBarStacked size={25} strokeWidth={2} />,
 		}, {
 			title: "Sair",
 			url: "#",
-			icon: LogOut,
+			icon: <LogOut size={25} strokeWidth={2} />,
 			className: "mt-auto absolute bottom-5",
 		},
 	];
 
-	return <Sidebar className="bg-white border-r border-blue-200 shadow-md">
+
+	return <Sidebar className="bg-white border-r border-blue-200 shadow-md w-1/6">
 		<SidebarContent>
-			<SidebarGroup className="h-full">
+			<SidebarGroup className="h-full ">
 				<SidebarGroupLabel className="text-blue-700 text-lg font-semibold mb-4">Menu</SidebarGroupLabel>
 				<SidebarGroupContent>
 					<SidebarMenu>
@@ -68,11 +73,10 @@ export function AppSidebar() {
 							<SidebarMenuItem key={title} className={className}>
 								<SidebarMenuButton
 									tooltip={title}
-									className="flex items-center gap-3 text-blue-900 hover:bg-blue-100 p-2 rounded-md"
+									className="flex items-center gap-3 h-auto text-blue-900 hover:bg-blue-100 p-2 rounded-md"
 									onClick={() => Router.push(url)}
 								>
-									{React.createElement(icon, { className: "w-5 h-5" })}
-									<span className="text-sm font-medium">{title}</span>
+									<span className="text-md font-medium flex gap-5 items-center">{icon} {title}</span>
 								</SidebarMenuButton>
 							</SidebarMenuItem>
 						))}

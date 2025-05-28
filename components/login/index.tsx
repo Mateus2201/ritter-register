@@ -80,7 +80,7 @@ export default function LoginComponent() {
 
     return <Form {...form} >
         <form onSubmit={form.handleSubmit(onSubmit)} className="flex  flex-col gap-4 p-4 h-screen max-w-md mx-auto ">
-            <h1 className="text-2xl font-bold text-center">Cadastro</h1>
+            <h1 className="text-2xl font-bold text-center">Login</h1>
             <AlertComponent {...propsRegister} />
             <FormField
                 control={form.control}

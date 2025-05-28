@@ -31,25 +31,31 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
 import Manufacturer from "@/types/Manufacturer";
-import { useManufacturer } from "@/hooks/use-manufacturer";
-import { FormDataManufacturer } from "@/schema-forms/form-manufacturer";
+import VehicleCategory from "@/types/VehicleCategory";
+import { FormDataVehicleCategory } from "@/schema-forms/form-vehicle-category";
+import { useVehicleCategory } from "@/hooks/use-vehicle-category";
 
-export default function FormManufacturer() {
-	const [useManufacturerData, setManufacturerData] = useState<Manufacturer[]>([]);
+export default function FormVehicleCategory() {
+	const [useVehicleCategoryData, setVehicleCategoryData] = useState<VehicleCategory[]>([]);
 
-	const { createManufacturer, getAllManufacturer } = useManufacturer();
+	const { createVehicleCategory, getAllVehicleCategory } = useVehicleCategory();
 
-	const { useSetFormManufacturer } = FormDataManufacturer();
+	const { useSetFormVehicleCategory } = FormDataVehicleCategory();
 
-	function onSubmit(data: { name: string }) {
-		const { name } = data;
+	function onSubmit(data: { description: string }) {
+		const { description } = data;
 
-		const newManufacturer: Manufacturer = { name };
+		const newVehicleCategory: VehicleCategory = {
+			description
+		};
 
-		createManufacturer(newManufacturer)
+		console.log("Dados do formulário:", newVehicleCategory);
+
+
+		createVehicleCategory(newVehicleCategory)
 			.then((response) => {
 				if (response) {
-					toast("Fabricante incluída com sucesso!", {
+					toast("Categoria de Veículo incluída com sucesso!", {
 						description: new Date().toLocaleDateString("pt-BR"),
 						action: {
 							label: "Fechar",
@@ -59,7 +65,7 @@ export default function FormManufacturer() {
 				}
 			})
 			.catch(({ error }) => {
-				toast("Erro ao criar Fabricante:", {
+				toast("Erro ao criar Categoria de Veículo:", {
 					description: error,
 					action: {
 						label: "Fechar",
@@ -69,14 +75,14 @@ export default function FormManufacturer() {
 			}).finally(() => {
 				SetUpdateListAllManufacturer();
 
-				useSetFormManufacturer.reset();
+				useSetFormVehicleCategory.reset();
 			})
 	}
 
 	const SetUpdateListAllManufacturer = () => {
-		getAllManufacturer()
+		getAllVehicleCategory()
 			.then((response) => {
-				setManufacturerData(response);
+				setVehicleCategoryData(response);
 
 			}).catch((error) => {
 				toast("Erro ao buscar dados da API:", {
@@ -94,10 +100,10 @@ export default function FormManufacturer() {
 	}, []);
 
 	const MakeTableRow = () => {
-		return useManufacturerData.map(({ idManufacturer, name, createdAt, createdBy, updatedAt, updatedBy }: Manufacturer) => (
-			<TableRow key={idManufacturer}>
-				<TableCell className="text-center not-md:hidden">{idManufacturer}</TableCell>
-				<TableCell className="text-center">{name}</TableCell>
+		return useVehicleCategoryData.map(({ idVehicleCategory, description, createdAt, createdBy, updatedAt, updatedBy }: VehicleCategory) => (
+			<TableRow key={idVehicleCategory}>
+				<TableCell className="text-center not-md:hidden">{idVehicleCategory}</TableCell>
+				<TableCell className="text-center">{description}</TableCell>
 				<TableCell className="text-center not-md:hidden">{createdBy}</TableCell>
 				<TableCell className="text-center not-md:hidden">{createdAt ? new Date(createdAt).toLocaleDateString("pt-BR") : ""}</TableCell>
 				<TableCell className="text-center not-md:hidden">{updatedBy}</TableCell>
@@ -111,15 +117,15 @@ export default function FormManufacturer() {
 		));
 	}
 
-	return <Form {...useSetFormManufacturer}>
+	return <Form {...useSetFormVehicleCategory}>
 		<Toaster />
-		<form onSubmit={useSetFormManufacturer.handleSubmit(onSubmit)} className="grid gap-12 mt-8">
+		<form onSubmit={useSetFormVehicleCategory.handleSubmit(onSubmit)} className="grid gap-12 mt-8">
 			<Card className="shadow-md border border-blue-200 bg-[#f8f8f8]">
 				<CardHeader className="bg-indigo-50">
-					<CardTitle className="text-xl text-[#626464]"> CADASTRO DE FABRICANTES</CardTitle>
+					<CardTitle className="text-xl text-[#626464]"> CADASTRO DE CATEGORIA DE VEÍCULOS</CardTitle>
 				</CardHeader>
 				<CardContent className="grid md:grid-cols-2 gap-6">
-					<FormField control={useSetFormManufacturer.control} name="name" render={({ field }) => (
+					<FormField control={useSetFormVehicleCategory.control} name="description" render={({ field }) => (
 						<FormItem>
 							<FormControl>
 								<Input placeholder="Descrição" {...field} />

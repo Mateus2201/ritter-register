@@ -140,7 +140,7 @@ export default function FormColor() {
 				<div className="overflow-x-auto rounded-md border border-gray-200 m-5">
 					<div className=" max-h-[400px] overflow-x-scroll overflow-y-scroll">
 						<Table className="w-full text-sm text-left text-gray-500">
-							<TableCaption>Lista das categorias adicionadas.</TableCaption>
+							<TableCaption>Lista das cores adicionadas.</TableCaption>
 							<TableHeader>
 								<TableRow>
 									<TableHead className="text-center text-md not-md:hidden">Id</TableHead>
