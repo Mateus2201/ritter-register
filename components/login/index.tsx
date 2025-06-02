@@ -15,11 +15,11 @@ import AlertComponent from '../alert'
 
 const formSchema = z.object({
     username: z.string().min(6, {
-        message: "Nome deve ter pelo menos 2 caracteres",
+        message: "Nome deve ter pelo menos 6 caracteres",
     }).max(20, {
         message: "Nome deve ter no máximo 20 caracteres",
     }),
-    password: z.string().min(4, {
+    password: z.string().min(6, {
         message: "Senha deve ter pelo menos 6 caracteres",
     }).max(20, {
         message: "Senha deve ter no máximo 20 caracteres",

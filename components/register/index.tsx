@@ -20,7 +20,7 @@ const formSchema = z.object({
     }),
 
     username: z.string().min(6, {
-        message: "Login deve ter pelo menos 2 caracteres",
+        message: "Login deve ter pelo menos 6 caracteres",
     }).max(20, {
         message: "Login deve ter no máximo 20 caracteres",
     }),

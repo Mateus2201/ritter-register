@@ -31,10 +31,10 @@ export function AppSidebar() {
 
 	const items: MenuItem[] = [
 		{
-		// 	title: "Home",
-		// 	url: "/home",
-		// 	icon: <Home size={25} strokeWidth={2} />,
-		// }, {
+			// 	title: "Home",
+			// 	url: "/home",
+			// 	icon: <Home size={25} strokeWidth={2} />,
+			// }, {
 			title: "Veiculos",
 			url: "/vehicles",
 			icon: <Car size={25} strokeWidth={2} />,
@@ -66,6 +66,8 @@ export function AppSidebar() {
 	return <Sidebar className="bg-white border-r border-blue-200 shadow-md w-1/6">
 		<SidebarContent>
 			<SidebarGroup className="h-full ">
+				<SidebarTrigger className="relative bg-[#464646] text-amber-50" />
+
 				<SidebarGroupLabel className="text-blue-700 text-lg font-semibold mb-4">Menu</SidebarGroupLabel>
 				<SidebarGroupContent>
 					<SidebarMenu>
@@ -90,6 +92,6 @@ export function AppSidebar() {
 export default function SidebarComponent() {
 	return <SidebarProvider className="absolute w-0 border-2">
 		<AppSidebar />
-		<SidebarTrigger />
+		<SidebarTrigger className="relative bg-[#464646] text-amber-50" />
 	</SidebarProvider>
 }

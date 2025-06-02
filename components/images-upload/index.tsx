@@ -71,7 +71,7 @@ export default function UploadImages() {
                 multiple
                 onChange={handleFileChange}
             />
-            <Select>
+            {/* <Select>
                 <SelectTrigger>
                     <SelectValue placeholder="Tipo Imagem" />
                 </SelectTrigger>
@@ -80,11 +80,11 @@ export default function UploadImages() {
                     <SelectItem value="interna">Interna</SelectItem>
                     <SelectItem value="detalhe">Detalhe</SelectItem>
                 </SelectContent>
-            </Select>
-            <div className="flex items-center space-x-2">
+            </Select> */}
+            {/* <div className="flex items-center space-x-2">
                 <Checkbox id="destaque" />
                 <label htmlFor="destaque">Destaque página inicial</label>
-            </div>
+            </div> */}
         </div>
 
         {images.length > 0 && (
