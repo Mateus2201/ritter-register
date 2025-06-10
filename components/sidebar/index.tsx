@@ -63,19 +63,19 @@ export function AppSidebar() {
 	];
 
 
-	return <Sidebar className="bg-white border-r border-blue-200 shadow-md w-1/6">
+	return <Sidebar className="bg-white border-r border-blue-200 shadow-md ">
 		<SidebarContent>
 			<SidebarGroup className="h-full ">
-				<SidebarTrigger className="relative bg-[#464646] text-amber-50" />
+				{/* <SidebarTrigger className="relative bg-[#464646] text-amber-50" /> */}
 
-				<SidebarGroupLabel className="text-blue-700 text-lg font-semibold mb-4">Menu</SidebarGroupLabel>
+				<SidebarGroupLabel className="text-[#464646] text-lg font-semibold mb-4">Menu</SidebarGroupLabel>
 				<SidebarGroupContent>
 					<SidebarMenu>
 						{items.map(({ title, url, className, icon }) => (
 							<SidebarMenuItem key={title} className={className}>
 								<SidebarMenuButton
 									tooltip={title}
-									className="flex items-center gap-3 h-auto text-blue-900 hover:bg-blue-100 p-2 rounded-md"
+									className="flex items-center gap-3 h-auto text-[#464646] hover:bg-white p-2 rounded-md"
 									onClick={() => Router.push(url)}
 								>
 									<span className="text-md font-medium flex gap-5 items-center">{icon} {title}</span>
@@ -92,6 +92,6 @@ export function AppSidebar() {
 export default function SidebarComponent() {
 	return <SidebarProvider className="absolute w-0 border-2">
 		<AppSidebar />
-		<SidebarTrigger className="relative bg-[#464646] text-amber-50" />
+		<SidebarTrigger className="relative bg-[#464646] text-white" />
 	</SidebarProvider>
 }

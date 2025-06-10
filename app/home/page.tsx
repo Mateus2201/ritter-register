@@ -1,4 +1,4 @@
-import FormVehicle from '@/forms/form-vehicle'
+import FormVehicle from '@/forms/form-vehicle-1'
 import VehicleForm from '@/components/optionals'
 import PrivateRoute from '@/components/use-routes'
 import SidebarComponent from '@/components/sidebar'
