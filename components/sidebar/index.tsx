@@ -31,10 +31,10 @@ export function AppSidebar() {
 
 	const items: MenuItem[] = [
 		{
-			// 	title: "Home",
-			// 	url: "/home",
-			// 	icon: <Home size={25} strokeWidth={2} />,
-			// }, {
+			title: "Home",
+			url: "/home",
+			icon: <Home size={25} strokeWidth={2} />,
+		}, {
 			title: "Veiculos",
 			url: "/vehicles",
 			icon: <Car size={25} strokeWidth={2} />,

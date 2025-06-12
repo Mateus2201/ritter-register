@@ -4,7 +4,7 @@ import { z } from "zod";
 
 export function FormDataOptional() {
   const schemaOptional = z.object({
-    description: z.string().min(6, "Minimo 5 caracteres").max(50, "Máximo 50 caracteres"),
+    description: z.string().min(1, "Minimo 1 caracteres").max(50, "Máximo 50 caracteres"),
     idOptionalCategory: z.number({ required_error: "Selecione uma categoria" }).min(1, "Selecione uma categoria"),
   });
 

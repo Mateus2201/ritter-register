@@ -43,7 +43,7 @@ export default function FormOptionalCategory() {
 
 	function onSubmit(data: { description: string }) {
 		const { description } = data;
-		const newOptionalCategory: OptionalCategory = { description };
+		const newOptionalCategory: OptionalCategory = { description, optional: [] };
 
 		createOptionalCategory(newOptionalCategory)
 			.then((response) => {

@@ -2,8 +2,8 @@ import OptionalCategory from "./OptionalCategory";
 import VehicleCategory from "./VehicleCategory";
 
 type Optional = {
-  idOptional?: number;
-  description?: string;
+  idOptional: number;
+  description: string;
   idOptionalCategory?: number;
   idVehicleCategory?: number;
   createdAt?: Date;

@@ -6,6 +6,7 @@ import {
     SelectTrigger,
     SelectValue
 } from '../ui/select'
+import { number } from 'zod'
 
 interface Option {
     value: number | string
@@ -16,7 +17,7 @@ interface SelectComponentProps {
     label: string
     id: string
     onChange?: (value: string) => void
-    value: string
+    value: string | number
     dataValue?: Option[]
     className?: string
 }
@@ -29,7 +30,7 @@ export default function SelectComponent({
     dataValue,
     className
 }: SelectComponentProps) {
-    return <Select onValueChange={onChange} value={value}>
+    return <Select onValueChange={onChange} value={value !== undefined && value !== null ? String(value) : undefined}>
         <SelectTrigger className={`w-full ${className}`} id={id}>
             <SelectValue placeholder={label} ></SelectValue>
         </SelectTrigger>

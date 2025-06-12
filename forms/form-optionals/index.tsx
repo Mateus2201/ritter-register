@@ -39,7 +39,11 @@ import { toast } from "sonner";
 
 export default function FormOptional() {
 	const [useOptionalData, setOptionalData] = useState<Optional[]>([]);
-	const [useOptionalCategoryData, setOptionalCategoryData] = useState<OptionalCategory[]>([{ description: "Categoria Opcional", idOptionalCategory: 0 }]);
+	const [useOptionalCategoryData, setOptionalCategoryData] = useState<OptionalCategory[]>([{
+		description: "Categoria Opcional",
+		idOptionalCategory: 0,
+		optional: []
+	}]);
 
 	const { getAllOptionalCategory } = useOptionalCategory();
 	const { getAllOptional, createOptional } = useOptional();
@@ -50,8 +54,10 @@ export default function FormOptional() {
 		const { description, idOptionalCategory } = data;
 
 		const newOptional: Optional = {
+			idOptional: 0,
 			idOptionalCategory: idOptionalCategory,
-			description
+			description,
+			OptionalCategory: undefined
 		};
 
 		createOptional(newOptional)
@@ -145,14 +151,6 @@ export default function FormOptional() {
 					<CardTitle className="text-xl text-[#626464]"> CADASTRO DE OPCIONAIS</CardTitle>
 				</CardHeader>
 				<CardContent className="grid md:grid-cols-3 gap-6">
-					<FormField control={useSetFormOptional.control} name="description" render={({ field }) => (
-						<FormItem>
-							<FormControl>
-								<Input placeholder="Descrição" {...field} />
-							</FormControl>
-							<FormMessage className="text-red-500" />
-						</FormItem>
-					)} />
 					<FormField
 						control={useSetFormOptional.control}
 						name="idOptionalCategory"
@@ -176,7 +174,14 @@ export default function FormOptional() {
 							</FormItem>
 						)}
 					/>
-
+					<FormField control={useSetFormOptional.control} name="description" render={({ field }) => (
+						<FormItem>
+							<FormControl>
+								<Input placeholder="Descrição" {...field} />
+							</FormControl>
+							<FormMessage className="text-red-500" />
+						</FormItem>
+					)} />
 					<Button type="submit" className="px-10 py-4 border text-[#626464] hover:bg-[#626464] hover:text-white bg-white">
 						<Plus className="w-4 h-4 mr-2" /> Adicionar
 					</Button>
