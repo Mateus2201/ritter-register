@@ -48,23 +48,6 @@ export default function Stock() {
             </div> : <div className='flex items-center justify-center w-full h-full'>
                 <h1 className='text-3xl font-bold text-background'>Nenhum veículo encontrado</h1>
             </div>}
-            {typeof countCarsTotal === 'number' && countCarsTotal > 9 &&
-                <ReactPaginate
-                    previousLabel={"Anterior"}
-                    nextLabel={"Próximo"}
-                    breakLabel={"..."}
-                    pageCount={totalPages}
-                    marginPagesDisplayed={2}
-                    pageRangeDisplayed={3}
-                    onPageChange={changePage}
-                    containerClassName="flex items-center justify-center gap-2 w-full h-15 p-0 mt-5"
-                    activeClassName="text-xl bg-secondary text-offWhite"
-                    previousClassName="select-none items-center  hover:bg-secondary hover:text-offWhite border-white rounded-md p-2 "
-                    nextClassName="select-none items-center  hover:bg-secondary hover:text-offWhite border-white rounded-md p-2 "
-                    pageClassName="select-none items-center not-md:hidden  hover:bg-secondary hover:text-offWhite border-white rounded-md p-2 "
-                    breakClassName="select-none items-center not-md:hidden  hover:bg-secondary hover:text-offWhite border-white rounded-md p-2 "
-                    disabledClassName="select-none items-center not-md:hidden  hover:bg-secondary hover:text-offWhite border-white rounded-md p-2 "
-                />}
         </div>
     </div>
 };

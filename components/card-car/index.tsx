@@ -15,10 +15,10 @@ interface CardCarProps {
 }
 
 export default function CardCar({ Vehicle, className }: CardCarProps) {
-    const { idVehicle: id, model, notes, price, engine, modelYear, manufacturingYear, fuel, mileage, priceDisplay } = Vehicle;
+    const { idVehicle: id, model, price, engine, modelYear, manufacturingYear, fuel, mileage } = Vehicle;
     const [loader, setLoader] = useState<boolean>(false);
 
-    return <div key={id} className={cn('xl:h-full not-xl:mt-5 rounded-lg text-offWhite', className)}>
+    return <div key={id} className={cn(' xl:h-full not-xl:mt-5 rounded-lg text-offWhite', className)}>
         <div className='relative top-0 left-0 w-full md:h-60 h-70'>
             {/* <SwiperImages id={id} /> */}
         </div>
@@ -33,10 +33,10 @@ export default function CardCar({ Vehicle, className }: CardCarProps) {
             </div>
 
             <div className='flex justify-between items-center m-5'>
-                <h1 className='text-3xl font-bold'> {priceDisplay ? FormatNumber.formatPrice(price) : ('R$ ').concat(price.toString().replace(/./g, "*"))}</h1>
+                <h1 className='text-3xl font-bold'> {FormatNumber.formatPrice(price)}</h1>
             </div>
             <div className='grid grid-cols-1 gap-5 md:gap-2 m-5 md:relative w-full overflow-hidden whitespace-nowrap'>
-                <p className="z-21 flex items-center gap-2 w-full overflow-hidden whitespace-nowrap text-ellipsis"><ClipboardList /> {FormatNumber.formatPlate(Vehicle.licensePlate, Vehicle?.licensePlateDisplay)}  </p>
+                <p className="z-21 flex items-center gap-2 w-full overflow-hidden whitespace-nowrap text-ellipsis"><ClipboardList /> {Vehicle.licensePlate}  </p>
                 <p className='z-21 flex items-center gap-2 w-full overflow-hidden whitespace-nowrap text-ellipsis'><Calendar1 />{modelYear} / {manufacturingYear} </p>
                 <p className='z-23 flex items-center gap-2 w-full overflow-hidden whitespace-nowrap text-ellipsis'><Fuel />{fuel} </p>
                 <p className='z-22 flex items-center gap-2 w-full overflow-hidden whitespace-nowrap text-ellipsis'><Gauge />{mileage} </p>
@@ -49,7 +49,7 @@ export default function CardCar({ Vehicle, className }: CardCarProps) {
                     className='w-full bg-white text-background hover:bg-secondary hover:text-offWhite border rounded-lg border-gray-300 hover:border-0' >
                     {loader
                         ? <Loader className='animate-spin text-secondary opacity-100 hover:opacity-100  transition-opacity duration-1300 ease-in-out' />
-                        : <p className='font-bold text-md '>{'VER MAIS'}</p>
+                        : <p className='font-bold text-md '>{'Editar'}</p>
                     }
                 </Button>
             </Link>

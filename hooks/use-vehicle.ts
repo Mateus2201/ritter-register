@@ -10,7 +10,7 @@ export const useVehicle = () => {
 
       return (response.data as Vehicle[]) || [];
     } catch (error) {
-      console.error("Error fetching Optional Category:", error);
+      console.error("Error fetching Vehicle:", error);
       throw error;
     }
   };

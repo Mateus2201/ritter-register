@@ -49,9 +49,6 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
 
     const { useSetForm } = FormDataCar()
 
-    console.log(useIdVehicle);
-    
-
     function onSubmit(data: any) {
         const Vehicle: Vehicle = data;
 

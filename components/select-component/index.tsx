@@ -6,7 +6,6 @@ import {
     SelectTrigger,
     SelectValue
 } from '../ui/select'
-import { number } from 'zod'
 
 interface Option {
     value: number | string
