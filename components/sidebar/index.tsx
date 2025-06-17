@@ -36,7 +36,7 @@ export function AppSidebar() {
 			icon: <Home size={25} strokeWidth={2} />,
 		}, {
 			title: "Veiculos",
-			url: "/vehicles",
+			url: "/new-vehicles",
 			icon: <Car size={25} strokeWidth={2} />,
 		}, {
 			title: "Opcionais",

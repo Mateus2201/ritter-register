@@ -7,7 +7,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
 import FormatNumber from '../format/formatNumber';
-// import SwiperImages from '../swiper-images';
+import SwiperImages from '../swiper-images';
 
 interface CardCarProps {
     Vehicle: Vehicle
@@ -20,7 +20,7 @@ export default function CardCar({ Vehicle, className }: CardCarProps) {
 
     return <div key={id} className={cn(' xl:h-full not-xl:mt-5 rounded-lg text-offWhite', className)}>
         <div className='relative top-0 left-0 w-full md:h-60 h-70'>
-            {/* <SwiperImages id={id} /> */}
+            <SwiperImages id={id} />
         </div>
         <div className='mt-5 px-3'>
             <div className='flex justify-start items-baseline gap-1 m-5'>
@@ -36,10 +36,10 @@ export default function CardCar({ Vehicle, className }: CardCarProps) {
                 <h1 className='text-3xl font-bold'> {FormatNumber.formatPrice(price)}</h1>
             </div>
             <div className='grid grid-cols-1 gap-5 md:gap-2 m-5 md:relative w-full overflow-hidden whitespace-nowrap'>
-                <p className="z-21 flex items-center gap-2 w-full overflow-hidden whitespace-nowrap text-ellipsis"><ClipboardList /> {Vehicle.licensePlate}  </p>
-                <p className='z-21 flex items-center gap-2 w-full overflow-hidden whitespace-nowrap text-ellipsis'><Calendar1 />{modelYear} / {manufacturingYear} </p>
-                <p className='z-23 flex items-center gap-2 w-full overflow-hidden whitespace-nowrap text-ellipsis'><Fuel />{fuel} </p>
-                <p className='z-22 flex items-center gap-2 w-full overflow-hidden whitespace-nowrap text-ellipsis'><Gauge />{mileage} </p>
+                <p className="z-1 flex items-center gap-2 w-full overflow-hidden whitespace-nowrap text-ellipsis"><ClipboardList /> {Vehicle.licensePlate}  </p>
+                <p className='z-2 flex items-center gap-2 w-full overflow-hidden whitespace-nowrap text-ellipsis'><Calendar1 />{modelYear} / {manufacturingYear} </p>
+                <p className='z-3 flex items-center gap-2 w-full overflow-hidden whitespace-nowrap text-ellipsis'><Fuel />{fuel} </p>
+                <p className='z-4 flex items-center gap-2 w-full overflow-hidden whitespace-nowrap text-ellipsis'><Gauge />{mileage} </p>
             </div>
         </div>
         <div className='p-2'>

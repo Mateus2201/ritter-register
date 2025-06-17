@@ -29,7 +29,7 @@ export default function SelectComponent({
     dataValue,
     className
 }: SelectComponentProps) {
-    return <Select onValueChange={onChange} value={value !== undefined && value !== null ? String(value) : undefined}>
+    return <Select onValueChange={onChange} value={value ? String(value) : undefined}>
         <SelectTrigger className={`w-full ${className}`} id={id}>
             <SelectValue placeholder={label} ></SelectValue>
         </SelectTrigger>

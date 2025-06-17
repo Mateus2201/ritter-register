@@ -35,21 +35,24 @@ export const useVehicle = () => {
         Vehicle
       );
 
-      return response.data;
+      return (response.data as Vehicle) || null;
     } catch (error) {
       console.error("Error creating Optional Category:", error);
       throw error;
     }
   };
 
-  const updateVehicle = async (data: any) => {
+  const updateVehicle = async (data: Vehicle) => {
     try {
+
+      console.log(data);
+      
       const response = await publicApi.put(
-        `/cars/${data.id}`,
+        `/cars`,
         data
       );
 
-      return response.data;
+      return (response.data as Vehicle) || null;
     } catch (error) {
       console.error("Error updating Optional Category:", error);
       throw error;

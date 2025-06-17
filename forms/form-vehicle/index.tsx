@@ -32,14 +32,14 @@ interface VehicleProps {
 }
 
 export default function FormVehicle({ idVehicle }: VehicleProps) {
-    const [useIdVehicle, setIdVehicle] = useState<string>(idVehicle ?? '')
+    const [idVehicleState, setIdVehicleState] = useState<string>(idVehicle ?? '')
 
     const { getAllColors } = useColors();
     const { getAllManufacturer } = useManufacturer();
     const { getAllOptional } = useOptional();
     const { getAllOptionalCategory } = useOptionalCategory();
     const { getAllVehicleCategory } = useVehicleCategory();
-    const { getVehicleById, createVehicle } = useVehicle();
+    const { getVehicleById, createVehicle, updateVehicle } = useVehicle();
 
     const [useColorData, setUseColorData] = useState<Color[]>([]);
     const [useManufacturerData, setManufacturerData] = useState<Manufacturer[]>([]);
@@ -49,85 +49,102 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
 
     const { useSetForm } = FormDataCar()
 
-    function onSubmit(data: any) {
-        const Vehicle: Vehicle = data;
+    const handleSuccess = (vehicle: Vehicle) => {
+        useSetForm.reset(vehicle);
 
-        Vehicle.idVehicle = 0; // Defina o ID como 0 para criar um novo veículo
+        toast("Veículo incluído/alterado com sucesso!", {
+            description: new Date().toLocaleDateString("pt-BR"),
+            action: {
+                label: "Fechar",
+                onClick: () => console.log("Fechar toast"),
+            },
+        });
+    };
 
-        createVehicle(Vehicle)
-            .then((response: Vehicle) => {
-                if (response) {
-                    console.log(response);
-                    
-                    setIdVehicle(response.idVehicle.toString())
+    const handleError = (message: string, error: unknown) => {
+        toast.error(message, {
+            description: String(error),
+            action: {
+                label: "Fechar",
+                onClick: () => console.log("Fechar toast"),
+            },
+        });
+    };
 
-                    useSetForm.reset();
+    const onSubmit = async (data: any) => {
+        const vehicle: Vehicle = {
+            idVehicle: idVehicleState ? Number(idVehicleState) : 0,
+            ...data,
+        };
 
-                    toast("Veículo incluído com sucesso!", {
-                        description: new Date().toLocaleDateString("pt-BR"),
-                        action: {
-                            label: "Fechar",
-                            onClick: () => console.log("Undo"),
-                        },
-                    })
-                }
-            })
-            .catch((error) => {
-                toast.error("Erro ao criar Veículo!", {
-                    description: error,
-                    action: {
-                        label: "Fechar",
-                        onClick: () => console.log("Undo"),
-                    },
-                });
-            });
-    }
+        try {
+            const response = idVehicleState
+                ? await updateVehicle(vehicle)
+                : await createVehicle(vehicle);
 
-    useEffect(() => {
-        if (useIdVehicle) {
-            console.log('id', useIdVehicle);
-            
-            getVehicleById({ id: useIdVehicle })
-                .then((vehicle) => {
-
-                    if (vehicle) {
-                        console.log(vehicle);
-
-                        useSetForm.reset(vehicle);
-                    }
-                })
-                .catch(console.error);
+            if (response) handleSuccess(response);
+        } catch (error) {
+            handleError("Erro ao salvar o veículo!", error);
         }
-    }, [useIdVehicle, useSetForm]);
+    };
 
     useEffect(() => {
-        Promise.all([getAllOptionalCategory({}), getAllOptional({})]).then(([categories, optional]) => {
+        if (idVehicleState) {
+            getVehicleById({ id: idVehicleState })
+                .then((vehicle) => {
+                    if (vehicle) useSetForm.reset(vehicle);
+                });
+        }
+    }, [idVehicleState, useSetForm]);
 
-            const categoriesWithOptionals = categories.map((category: OptionalCategory) => ({
-                idOptionalCategory: category.idOptionalCategory,
-                description: category.description,
-                optional: optional.filter(opt => opt.idOptionalCategory == category.idOptionalCategory)
-            }));
+    useEffect(() => {
+        const fetchInitialData = async () => {
+            try {
+                const [categories, optionalsList] = await Promise.all([
+                    getAllOptionalCategory({}),
+                    getAllOptional({}),
+                ]);
 
-            setOptionalCategoryData(categoriesWithOptionals);
-        }).catch(console.error);
+                const enrichedCategories = categories.map((category) => ({
+                    ...category,
+                    optional: optionalsList.filter(
+                        (opt) => opt.idOptionalCategory === category.idOptionalCategory
+                    ),
+                }));
 
+                setOptionalCategoryData(enrichedCategories);
+                setOptionalData(optionalsList);
+            } catch (error) {
+                console.error("Erro ao carregar dados iniciais:", error);
+            }
+        };
+
+        fetchInitialData();
+    }, []);
+
+
+    useEffect(() => {
         getAllColors({})
             .then(setUseColorData)
-            .catch(console.error);
+            .catch(err => {
+                console.log(err);
+            })
+    }, []);
 
+    useEffect(() => {
         getAllManufacturer({})
             .then(setManufacturerData)
-            .catch(console.error);
-
-        getAllOptional({})
-            .then(setOptionalData)
-            .catch(console.error);
-
+            .catch(err => {
+                console.log(err);
+            })
+    }, []);
+    useEffect(() => {
         getAllVehicleCategory({})
             .then(setVehicleCategoryData)
-            .catch(console.error);
-    }, []);
+            .catch(err => {
+                console.log(err);
+            })
+    }, []); 
 
     return <Form {...useSetForm}>
         <Toaster />
@@ -165,7 +182,7 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
                                 <FormControl>
                                     <Label className="flex items-center space-x-2">
                                         <Checkbox checked={!!field.value} className="h-9 w-9" onCheckedChange={field.onChange} onBlur={field.onBlur} name={field.name} ref={field.ref} />
-                                        Destaque
+                                        Blindado
                                     </Label>
                                 </FormControl>
                                 <FormMessage className="text-red-500" />
@@ -176,7 +193,7 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
                                 <FormControl>
                                     <Label className="flex items-center space-x-2">
                                         <Checkbox checked={!!field.value} className="h-9 w-9" onCheckedChange={field.onChange} onBlur={field.onBlur} name={field.name} ref={field.ref} />
-                                        Destaque
+                                        Clássico
                                     </Label>
                                 </FormControl>
                                 <FormMessage className="text-red-500" />
