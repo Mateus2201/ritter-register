@@ -26,13 +26,16 @@ import VehicleCategory from "@/types/VehicleCategory";
 import Vehicle from "@/types/Vehicle";
 import { useVehicle } from "@/hooks/use-vehicle";
 import { toast, Toaster } from "sonner";
+import { useRouter } from 'next/navigation'
 
 interface VehicleProps {
     idVehicle?: string
 }
 
 export default function FormVehicle({ idVehicle }: VehicleProps) {
-    const [idVehicleState, setIdVehicleState] = useState<string>(idVehicle ?? '')
+    const router = useRouter()
+
+    const [idVehicleState] = useState<string>(idVehicle ?? '')
 
     const { getAllColors } = useColors();
     const { getAllManufacturer } = useManufacturer();
@@ -52,6 +55,7 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
     const handleSuccess = (vehicle: Vehicle) => {
         useSetForm.reset(vehicle);
 
+
         toast("Veículo incluído/alterado com sucesso!", {
             description: new Date().toLocaleDateString("pt-BR"),
             action: {
@@ -59,6 +63,8 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
                 onClick: () => console.log("Fechar toast"),
             },
         });
+
+        router.push('/vehicles/' + vehicle.idVehicle.toString())
     };
 
     const handleError = (message: string, error: unknown) => {
@@ -115,6 +121,8 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
                 setOptionalCategoryData(enrichedCategories);
                 setOptionalData(optionalsList);
             } catch (error) {
+                handleError("Erro ao carregar dados iniciais!", error);
+
                 console.error("Erro ao carregar dados iniciais:", error);
             }
         };
@@ -127,6 +135,8 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
         getAllColors({})
             .then(setUseColorData)
             .catch(err => {
+                handleError("Erro ao carregar cores!", err);
+
                 console.log(err);
             })
     }, []);
@@ -135,6 +145,8 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
         getAllManufacturer({})
             .then(setManufacturerData)
             .catch(err => {
+                handleError("Erro ao carregar fabricantes!", err);
+
                 console.log(err);
             })
     }, []);
@@ -142,9 +154,10 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
         getAllVehicleCategory({})
             .then(setVehicleCategoryData)
             .catch(err => {
+                handleError("Erro ao carregar categoria dos veiculos!", err);
                 console.log(err);
             })
-    }, []); 
+    }, []);
 
     return <Form {...useSetForm}>
         <Toaster />
