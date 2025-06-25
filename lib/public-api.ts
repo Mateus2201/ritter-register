@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const publicApi = axios.create({
-  baseURL: "http://localhost:3001/api",
+  baseURL: "http://168.231.96.194:3000/api",
 });
 
 publicApi.interceptors.request.use((config) => {

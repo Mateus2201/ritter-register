@@ -55,7 +55,6 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
     const handleSuccess = (vehicle: Vehicle) => {
         useSetForm.reset(vehicle);
 
-
         toast("Veículo incluído/alterado com sucesso!", {
             description: new Date().toLocaleDateString("pt-BR"),
             action: {

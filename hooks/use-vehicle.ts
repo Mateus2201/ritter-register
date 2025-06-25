@@ -17,9 +17,7 @@ export const useVehicle = () => {
 
   const getVehicleById = async (data?: any) => {
     try {
-      const response = await publicApi.get(`/cars/${data.id}`, {
-        params: data,
-      });
+      const response = await publicApi.get(`/cars/${data.id}`);
 
       return (response.data as Vehicle) || null;
     } catch (error) {
@@ -30,10 +28,7 @@ export const useVehicle = () => {
 
   const createVehicle = async (Vehicle: Vehicle) => {
     try {
-      const response = await publicApi.post(
-        "/cars",
-        Vehicle
-      );
+      const response = await publicApi.post("/cars", Vehicle);
 
       return (response.data as Vehicle) || null;
     } catch (error) {
@@ -44,13 +39,9 @@ export const useVehicle = () => {
 
   const updateVehicle = async (data: Vehicle) => {
     try {
-
       console.log(data);
-      
-      const response = await publicApi.put(
-        `/cars`,
-        data
-      );
+
+      const response = await publicApi.put(`/cars`, data);
 
       return (response.data as Vehicle) || null;
     } catch (error) {
@@ -63,7 +54,6 @@ export const useVehicle = () => {
     getAllVehicle,
     createVehicle,
     updateVehicle,
-    getVehicleById
+    getVehicleById,
   };
-
 };

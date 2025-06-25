@@ -1,9 +1,11 @@
 type VehicleImage = {
   idVehicleImage: number;
   idVehicle: number;
-  imageType: string;
-  imageFile: string;
-  highlight: string;
+  name: string;
+  secureURL: string;
+  publicId: string;
+  order: string;
+  isActive: boolean;
   createdAt: Date;
   createdBy: string;
   updatedAt: Date;
