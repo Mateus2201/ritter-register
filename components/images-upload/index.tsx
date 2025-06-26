@@ -21,7 +21,7 @@ import {
 } from "@dnd-kit/sortable";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
-import publicApi from "@/lib/public-api";
+import publicApi from "@/lib/api";
 import { useVehicleImage } from "@/hooks/use-vehicle-images";
 
 interface VehicleProps {

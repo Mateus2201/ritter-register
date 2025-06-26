@@ -1,4 +1,4 @@
-import publicApi from "@/lib/public-api";
+import publicApi from "@/lib/api";
 import VehicleCategory from "@/types/VehicleCategory";
 
 export function useVehicleCategory() {

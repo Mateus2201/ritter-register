@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const publicApi = axios.create({
-  baseURL: "http://168.231.96.194:3000/api",
+  baseURL: "https://api.ritterveiculos.com.br/api",
 });
 
 publicApi.interceptors.request.use((config) => {

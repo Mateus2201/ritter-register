@@ -4,58 +4,35 @@ import { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
-import publicApi from '@/lib/public-api'
-import { useAuth } from '@/src/contexts/auth-context'
+import publicApi from '@/lib/api'
+import { useAuthContext } from '@/src/contexts/auth-context'
 import { z } from 'zod'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import { useForm } from "react-hook-form"
 import { zodResolver } from '@hookform/resolvers/zod'
 import DialogType from '@/types/dialogs'
 import AlertComponent from '../alert'
+import { FormDataLogin } from '@/schema-forms/form-login'
+import { useAuth } from '@/hooks/use-auth'
 
-const formSchema = z.object({
-    username: z.string().min(6, {
-        message: "Nome deve ter pelo menos 6 caracteres",
-    }).max(20, {
-        message: "Nome deve ter no máximo 20 caracteres",
-    }),
-    password: z.string().min(6, {
-        message: "Senha deve ter pelo menos 6 caracteres",
-    }).max(20, {
-        message: "Senha deve ter no máximo 20 caracteres",
-    }),
-})
+
 
 export default function LoginComponent() {
     const [loading, setLoading] = useState(false)
     const router = useRouter()
-    const { setToken } = useAuth()
+    const { setToken } = useAuthContext()
     const [propsRegister, setPropsRegister] = useState<DialogType>()
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            username: "", password: "",
-        },
-    })
+    const { schemaLogin, useSetFormLogin } = FormDataLogin()
 
-    const resetForm = () => {
-        form.reset({
-            username: "",
-            password: "",
-        })
-    }
+    const { Login } = useAuth()
 
-    async function onSubmit(values: z.infer<typeof formSchema>) {
-        const { username, password } = values;
-
+    async function onSubmit(values: z.infer<typeof schemaLogin>) {
         setLoading(true)
         setPropsRegister({ ...propsRegister, open: false })
 
-        publicApi
-            .post("/auth/login", { username, password })
-            .then((res) => {
-                const { token } = res.data
+        Login(values)
+            .then((token) => {
 
                 localStorage.setItem('token', token)
                 setToken(token)
@@ -74,16 +51,15 @@ export default function LoginComponent() {
             })
             .finally(() => {
                 setLoading(false)
-                resetForm()
             })
     }
 
-    return <Form {...form} >
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex  flex-col gap-4 p-4 h-screen max-w-md mx-auto ">
+    return <Form {...useSetFormLogin} >
+        <form onSubmit={useSetFormLogin.handleSubmit(onSubmit)} className="flex flex-col gap-4 p-4  max-w-md mx-auto ">
             <h1 className="text-2xl font-bold text-center">Login</h1>
             <AlertComponent {...propsRegister} />
             <FormField
-                control={form.control}
+                control={useSetFormLogin.control}
                 name="username"
                 render={({ field }) => (
                     <FormItem>
@@ -102,7 +78,7 @@ export default function LoginComponent() {
                 )}
             />
             <FormField
-                control={form.control}
+                control={useSetFormLogin.control}
                 name="password"
                 render={({ field }) => (
                     <FormItem>

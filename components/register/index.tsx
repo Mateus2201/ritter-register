@@ -1,99 +1,54 @@
 'use client'
 
 import { useState } from 'react'
-import publicApi from '@/lib/public-api'
+import publicApi from '@/lib/api'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import AlertComponent from '@/components/alert'
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
 import DialogType from '@/types/dialogs'
+import { useAuth } from '@/hooks/use-auth'
+import { FormDataRegister } from '@/schema-forms/form-register'
+import { useRouter } from 'next/navigation'
 
-const formSchema = z.object({
-    name: z.string().min(6, {
-        message: "Nome deve ter pelo menos 6 caracteres",
-    }).max(50, {
-        message: "Nome deve ter no máximo 20 caracteres",
-    }),
-
-    username: z.string().min(6, {
-        message: "Login deve ter pelo menos 6 caracteres",
-    }).max(20, {
-        message: "Login deve ter no máximo 20 caracteres",
-    }),
-
-    password: z.string().min(6, {
-        message: "Senha deve ter pelo menos 6 caracteres",
-    }).max(20, {
-        message: "Senha deve ter no máximo 20 caracteres",
-    }),
-})
 
 export default function RegisterComponent() {
+    const router = useRouter()
+
     const [loading, setLoading] = useState<boolean>(false)
     const [propsRegister, setPropsRegister] = useState<DialogType>()
 
-    const form = useForm<z.infer<typeof formSchema>>({
-        resolver: zodResolver(formSchema),
-        defaultValues: {
-            name: "", username: "", password: "",
-        },
-    })
+    const { schemaRegister, useSetFormRegister } = FormDataRegister()
+    const { Register } = useAuth()
 
-    const resetForm = () => {
-        form.reset({
-            name: "",
-            username: "",
-            password: "",
-        })
-    }
-
-    async function onSubmit(values: z.infer<typeof formSchema>) {
-        const { name, username, password } = values;
-
-        setLoading(true)
+    async function onSubmit(values: z.infer<typeof schemaRegister>) {
         setPropsRegister({ ...propsRegister, open: false })
 
-        publicApi.post("/auth/register", { name, username, password, })
-            .then((res) => {
-                const { token } = res.data
-
-                console.log(token);
-
+        Register(values)
+            .then((token) => {
+                router.push('/home')
+            })
+            .catch(() => {
+                setLoading(false)
                 setPropsRegister({
-                    title: 'Cadastro realizado com sucesso!',
-                    description: 'Faça login agora!',
-                    confirm: () => setPropsRegister({ ...propsRegister, open: false }),
-                    confirmText: 'OK',
-                    confirmButton: true,
-                    open: true,
-                })
-
-                
-            }).catch(() => {
-                setPropsRegister({
-                    title: 'Cadastro sem sucesso!',
-                    description: 'Tente Novamente...',
+                    title: 'Login sem sucesso!',
+                    description: 'Senha ou login inválido. Tente novamente!',
                     cancel: () => setPropsRegister({ ...propsRegister, open: false }),
                     cancelText: 'OK',
                     cancelButton: true,
                     open: true
                 })
-            }).finally(() => {
-                setLoading(false)
-                resetForm()
             })
     }
 
-    return <Form {...form} >
-        <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 p-4 h-screen max-w-md mx-auto ">
+    return <Form {...useSetFormRegister} >
+        <form onSubmit={useSetFormRegister.handleSubmit(onSubmit)} className="flex flex-col gap-4 p-4 max-w-md mx-auto ">
             <h1 className="text-2xl font-bold text-center">Cadastro</h1>
             <AlertComponent {...propsRegister} />
             <FormField
-                control={form.control}
+                control={useSetFormRegister.control}
                 name="name"
                 render={({ field }) => (
                     <FormItem>
@@ -112,7 +67,7 @@ export default function RegisterComponent() {
                 )}
             />
             <FormField
-                control={form.control}
+                control={useSetFormRegister.control}
                 name="username"
                 render={({ field }) => (
                     <FormItem>
@@ -131,7 +86,7 @@ export default function RegisterComponent() {
                 )}
             />
             <FormField
-                control={form.control}
+                control={useSetFormRegister.control}
                 name="password"
                 render={({ field }) => (
                     <FormItem>

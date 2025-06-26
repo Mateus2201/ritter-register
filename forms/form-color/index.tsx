@@ -33,15 +33,16 @@ import { useColors } from "@/hooks/use-colors";
 import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
 import { FormDataColor } from "@/schema-forms/form-colors";
+import { z } from "zod";
 
 export default function FormColor() {
 	const [useColorData, setColorData] = useState<Color[]>([]);
 
 	const { getAllColors, createColor } = useColors();
 
-	const { useSetFormColor } = FormDataColor();
+	const { useSetFormColor, schemaColor } = FormDataColor();
 
-	function onSubmit(data: { description: string }) {
+	function onSubmit(data: z.infer<typeof schemaColor>) {
 		const { description } = data;
 
 		const newColor: Color = { description };

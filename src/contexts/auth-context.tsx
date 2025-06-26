@@ -2,7 +2,8 @@
 
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import publicApi from '@/lib/public-api' // onde você configurou o axios
+import publicApi from '@/lib/api' // onde você configurou o axios
+import { useAuth } from '@/hooks/use-auth'
 
 interface AuthContextType {
 	token: string | null
@@ -20,18 +21,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	const [loading, setLoading] = useState<boolean>(true);
 	const router = useRouter()
 
+	const { Login } = useAuth()
+
 	useEffect(() => {
 		const savedToken = localStorage.getItem('token')
-		console.log('Token tentando!');
-
 		if (savedToken) {
 			validateToken(savedToken)
-			setLoading(false);
-			console.log('Token encontrado!');
-
 		} else {
-			setLoading(false);
 			logout()
+			setLoading(false);
 		}
 	}, [])
 
@@ -48,6 +46,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 			}
 		} catch (error) {
 			logout()
+		} finally {
+			setLoading(false)
 		}
 	}
 
@@ -57,12 +57,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	}
 
 	const logout = () => {
+		console.log('Executando logout...');
+
 		localStorage.removeItem('token')
 		setToken(null)
-		
-		router.push('/entry')
-		console.log('Acesso negado! logout...');
 
+		router.push('/entry')
 	}
 
 	const value = {
@@ -77,4 +77,4 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 	return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
-export const useAuth = () => useContext(AuthContext)
+export const useAuthContext = () => useContext(AuthContext)

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useMemo, useState } from 'react';
 import GridVehicle from '@/components/grid-vehicle';
-import publicApi from '@/lib/public-api';
+import publicApi from '@/lib/api';
 import ReactPaginate from 'react-paginate';
 import Vehicle from '@/types/Vehicle';
 import { useVehicle } from '@/hooks/use-vehicle';

@@ -1,4 +1,4 @@
-import publicApi from "@/lib/public-api";
+import publicApi from "@/lib/api";
 import Vehicle from "@/types/Vehicle";
 
 export const useVehicle = () => {
