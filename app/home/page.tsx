@@ -1,8 +1,6 @@
-import VehicleForm from '@/components/optionals'
 import PrivateRoute from '@/components/use-routes'
 import SidebarComponent from '@/components/sidebar'
 import React from 'react'
-import CardCar from '@/components/card-car'
 import Stock from '@/components/stock'
 
 export default function PageHome() {
