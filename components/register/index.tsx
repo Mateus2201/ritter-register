@@ -18,6 +18,7 @@ export default function RegisterComponent() {
     const router = useRouter()
 
     const [loading, setLoading] = useState<boolean>(false)
+    const [useErros, setErros] = useState<string>('')
     const [propsRegister, setPropsRegister] = useState<DialogType>()
 
     const { schemaRegister, useSetFormRegister } = FormDataRegister()
@@ -30,16 +31,17 @@ export default function RegisterComponent() {
             .then((token) => {
                 router.push('/home')
             })
-            .catch(() => {
+            .catch((error) => {
                 setLoading(false)
-                setPropsRegister({
-                    title: 'Login sem sucesso!',
-                    description: 'Senha ou login inválido. Tente novamente!',
-                    cancel: () => setPropsRegister({ ...propsRegister, open: false }),
-                    cancelText: 'OK',
-                    cancelButton: true,
-                    open: true
-                })
+                setErros(error)
+                // setPropsRegister({
+                //     title: 'Login sem sucesso!',
+                //     description: JSON.stringify(error, null, 2),
+                //     cancel: () => setPropsRegister({ ...propsRegister, open: false }),
+                //     cancelText: 'OK',
+                //     cancelButton: true,
+                //     open: true
+                // })
             })
     }
 
@@ -56,7 +58,7 @@ export default function RegisterComponent() {
                         <FormControl>
                             <Input
                                 type="text"
-                                placeholder="Nome de usuário"
+                                placeholder="Nome"
                                 required
                                 className="border p-2 rounded"
                                 {...field}
@@ -75,7 +77,7 @@ export default function RegisterComponent() {
                         <FormControl>
                             <Input
                                 type="text"
-                                placeholder="Nome de usuário"
+                                placeholder="Login"
                                 required
                                 className="border border-accent outline-sky-50 p-2 rounded"
                                 {...field}
@@ -94,7 +96,7 @@ export default function RegisterComponent() {
                         <FormControl>
                             <Input
                                 type="password"
-                                placeholder="Nome de usuário"
+                                placeholder="Senha"
                                 required
                                 className="border p-2 rounded"
                                 {...field}
@@ -104,6 +106,7 @@ export default function RegisterComponent() {
                     </FormItem>
                 )}
             />
+            <div className='wrap-break-word'>{useErros}</div>
             <Button
                 type="submit"
                 disabled={loading}

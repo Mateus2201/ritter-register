@@ -25,7 +25,7 @@ export default function EntryPage() {
                 </div>
             </div>
             <button onClick={() => setShowLogin(!showLogin)} className="absolute bottom-4 left-1/2 -translate-x-1/2 px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">
-                {showLogin ? "Ir para Register" : "Ir para Login"}
+                {showLogin ? "Ir para Registro" : "Ir para Login"}
             </button>
         </div>
     </main>

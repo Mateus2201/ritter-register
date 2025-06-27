@@ -67,7 +67,7 @@ export default function LoginComponent() {
                         <FormControl>
                             <Input
                                 type="text"
-                                placeholder="Nome de usuário"
+                                placeholder="Login"
                                 required
                                 className=""
                                 {...field}
@@ -86,7 +86,7 @@ export default function LoginComponent() {
                         <FormControl>
                             <Input
                                 type="password"
-                                placeholder="Nome de usuário"
+                                placeholder="Senha"
                                 required
                                 className="border p-2 rounded"
                                 {...field}
