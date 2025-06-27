@@ -33,15 +33,14 @@ export default function RegisterComponent() {
             })
             .catch((error) => {
                 setLoading(false)
-                setErros(error)
-                // setPropsRegister({
-                //     title: 'Login sem sucesso!',
-                //     description: JSON.stringify(error, null, 2),
-                //     cancel: () => setPropsRegister({ ...propsRegister, open: false }),
-                //     cancelText: 'OK',
-                //     cancelButton: true,
-                //     open: true
-                // })
+                setPropsRegister({
+                    title: 'Registro sem sucesso!',
+                    description: JSON.stringify(error, null, 2),
+                    cancel: () => setPropsRegister({ ...propsRegister, open: false }),
+                    cancelText: 'OK',
+                    cancelButton: true,
+                    open: true
+                })
             })
     }
 
@@ -106,7 +105,6 @@ export default function RegisterComponent() {
                     </FormItem>
                 )}
             />
-            <div className='wrap-break-word'>{useErros}</div>
             <Button
                 type="submit"
                 disabled={loading}
