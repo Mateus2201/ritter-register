@@ -222,16 +222,14 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
             </div>
             <div className="grid gap-5">
                 <Tabs defaultValue="dados" value={selectedTab} onValueChange={setSelectedTab}>
-                    <TabsList className={`grid lg:grid-cols-${idVehicle ? 5 : 3} grid-cols-2  w-full not-lg:h-max space-x-5 gap-2`}>
+                    <TabsList className={`grid lg:grid-cols-${idVehicle ? 5 : 3} grid-cols-2 w-full not-lg:h-max h-min space-x-5 gap-2`}>
                         <TabsTrigger className="data-[state=active]:text-white w-full" value="dados">Dados</TabsTrigger>
                         <TabsTrigger className="data-[state=active]:text-white w-full" value="especificacoes">Especificações</TabsTrigger>
                         <TabsTrigger className="data-[state=active]:text-white w-full" value="observacoes">Observações</TabsTrigger>
 
-                        {idVehicle && <>
-                            <TabsTrigger className="data-[state=active]:text-white w-full" value="opcionais">Opcionais</TabsTrigger>
-                            <TabsTrigger className="data-[state=active]:text-white w-full" value="imagens">Imagens</TabsTrigger>
-
-                        </>}
+                        <TabsTrigger className={`data-[state=active]:text-white w-full ${!idVehicle && 'hidden' }`} value="opcionais">Opcionais</TabsTrigger>
+                        <TabsTrigger className={`data-[state=active]:text-white w-full ${!idVehicle && 'hidden' }`} value="imagens">Imagens</TabsTrigger>
+                       
                     </TabsList>
 
                     <form onSubmit={useSetForm.handleSubmit(onSubmit)} >
