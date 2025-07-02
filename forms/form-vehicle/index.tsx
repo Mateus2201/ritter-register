@@ -143,12 +143,33 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
     };
 
     useEffect(() => {
-        if (idVehicleState) {
-            getVehicleById({ id: idVehicleState })
-                .then((vehicle) => {
-                    if (vehicle) useSetForm.reset(vehicle);
-                });
-        }
+        const loadVehicle = async () => {
+            if (!idVehicleState) return;
+
+            const [
+                colors,
+                manufacturers,
+                categories,
+                vehicleData
+            ] = await Promise.all([
+                getAllColors({}),
+                getAllManufacturer({}),
+                getAllVehicleCategory({}),
+                getVehicleById({ id: idVehicleState }),
+            ]);
+
+            setUseColorData(colors);
+            setManufacturerData(manufacturers);
+            setVehicleCategoryData(categories);
+
+            if (vehicleData) {
+                useSetForm.reset(vehicleData);
+            }
+        };
+
+        loadVehicle().catch((err) => {
+            handleError("Erro ao carregar dados do veículo", err);
+        });
     }, [idVehicleState, useSetForm]);
 
     useEffect(() => {
@@ -225,9 +246,9 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
                         <TabsTrigger className="data-[state=active]:text-white w-full" value="especificacoes">Especificações</TabsTrigger>
                         <TabsTrigger className="data-[state=active]:text-white w-full" value="observacoes">Observações</TabsTrigger>
 
-                        <TabsTrigger className={`data-[state=active]:text-white w-full ${!idVehicle && 'hidden' }`} value="opcionais">Opcionais</TabsTrigger>
-                        <TabsTrigger className={`data-[state=active]:text-white w-full ${!idVehicle && 'hidden' }`} value="imagens">Imagens</TabsTrigger>
-                       
+                        <TabsTrigger className={`data-[state=active]:text-white w-full ${!idVehicle && 'hidden'}`} value="opcionais">Opcionais</TabsTrigger>
+                        <TabsTrigger className={`data-[state=active]:text-white w-full ${!idVehicle && 'hidden'}`} value="imagens">Imagens</TabsTrigger>
+
                     </TabsList>
 
                     <form onSubmit={useSetForm.handleSubmit(onSubmit)} >

@@ -1,3 +1,7 @@
+import Color from "./Color";
+import Manufacturer from "./Manufacturer";
+import VehicleCategory from "./VehicleCategory";
+
 type Vehicle = {
   idVehicle: number; // idveiculo
   idVehicleCategory: number; // idtipo_veiculo
@@ -27,7 +31,10 @@ type Vehicle = {
   updatedAt?: Date; // data_ultima_alteracao
   updatedBy?: string; // login_ultima_alteracao
   armored?: boolean; // blindado,
-  classic?:  boolean; // classico
+  classic?: boolean; // classico\
+  Manufacturer: Manufacturer;
+  VehicleType: VehicleCategory;
+  Color: Color;
 };
 
 export default Vehicle;
