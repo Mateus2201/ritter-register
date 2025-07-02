@@ -207,8 +207,6 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
             })
     }, []);
 
-    console.log(selectedTab);
-
     return <Form {...useSetForm}>
         <Toaster />
         <div className="w-full max-w-3xl mx-auto px-4 py-8 space-y-6">
