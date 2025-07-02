@@ -101,98 +101,95 @@ export default function FormColor() {
 	}, []);
 
 	const MakeTableRow = () => {
-		return useColorData.map(
-			({ idColor, description, createdAt, createdBy, updatedAt, updatedBy }: Color) => (
-				<TableRow key={idColor} className="hover:bg-muted/50 transition">
-					<TableCell className="text-center not-md:hidden text-gray-600">{idColor}</TableCell>
-					<TableCell className="text-center font-medium text-gray-800">{description}</TableCell>
-					<TableCell className="text-center not-md:hidden text-gray-600">{createdBy}</TableCell>
-					<TableCell className="text-center not-md:hidden text-gray-600">
-						{createdAt ? new Date(createdAt).toLocaleDateString("pt-BR") : "-"}
-					</TableCell>
-					<TableCell className="text-center not-md:hidden text-gray-600">{updatedBy}</TableCell>
-					<TableCell className="text-center not-md:hidden text-gray-600">
-						{updatedAt ? new Date(updatedAt).toLocaleDateString("pt-BR") : "-"}
-					</TableCell>
-					<TableCell className="text-center">
-						<Button
-							variant="ghost"
-							size="icon"
-							className="hover:bg-red-50 hover:text-red-500"
-							aria-label="Excluir"
-						>
-							<Trash2 className="w-4 h-4" />
+		return useColorData.map(({ idColor, description, createdAt, createdBy, updatedAt, updatedBy }: Color) => (
+			<TableRow key={idColor}>
+				<TableCell className="hidden md:table-cell">{idColor}</TableCell>
+				<TableCell>{description}</TableCell>
+				<TableCell className="hidden lg:table-cell">{createdBy}</TableCell>
+				<TableCell className="hidden lg:table-cell">
+					{createdAt ? new Date(createdAt).toLocaleDateString("pt-BR") : ""}
+				</TableCell>
+				<TableCell className="hidden xl:table-cell">{updatedBy}</TableCell>
+				<TableCell className="hidden xl:table-cell">
+					{updatedAt ? new Date(updatedAt).toLocaleDateString("pt-BR") : ""}
+				</TableCell>
+				<TableCell className="text-center">
+					<Button
+						variant="ghost"
+						size="icon"
+						className="hover:bg-destructive/10 text-destructive"
+						// onClick={() => handleDelete(idColor)}
+					>
+						<Trash2 className="w-4 h-4" />
+					</Button>
+				</TableCell>
+			</TableRow>
+		));
+	}
+
+
+	return <Form {...useSetFormColor}>
+		<Toaster />
+		<div className="w-full max-w-3xl mx-auto px-4 py-8 space-y-6">
+			<div className="text-center">
+				<h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+					Cadastro de Cores
+				</h2>
+				<p className="mt-2 text-muted-foreground text-sm sm:text-base">
+					Gerencie as cores disponíveis no sistema
+				</p>
+			</div>
+
+			<form onSubmit={useSetFormColor.handleSubmit(onSubmit)}>
+				<Card className="rounded-xl border bg-card shadow-sm p-6 space-y-4">
+					<div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-4">
+						<FormField
+							control={useSetFormColor.control}
+							name="description"
+							render={({ field }) => (
+								<FormItem className="w-full">
+									<FormControl>
+										<Input
+											placeholder="Nome da cor (ex: Azul Royal)"
+											{...field}
+											className="rounded-lg"
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<Button type="submit" className="w-full sm:w-auto h-full">
+							<Plus className="w-4 h-4 mr-2" />
+							Adicionar
 						</Button>
-					</TableCell>
-				</TableRow>
-			)
-		);
-	};
-
-	return (
-		<Form {...useSetFormColor}>
-			<Toaster />
-			<form
-				onSubmit={useSetFormColor.handleSubmit(onSubmit)}
-				className="max-w-6xl mx-auto p-4 space-y-8"
-			>
-				<Card className="shadow-lg border border-gray-200 rounded-2xl bg-white">
-					<CardHeader className="bg-gray-50 border-b border-gray-200 rounded-t-2xl px-6 py-4">
-						<CardTitle className="text-2xl font-semibold text-gray-800">
-							🎨 Cadastro de Cores
-						</CardTitle>
-					</CardHeader>
-					<CardContent className="px-6 py-8 space-y-6">
-						<div className="grid md:grid-cols-2 gap-4 items-end">
-							<FormField
-								control={useSetFormColor.control}
-								name="description"
-								render={({ field }) => (
-									<FormItem>
-										<FormControl>
-											<Input
-												placeholder="Descrição da cor"
-												{...field}
-												className="h-12 text-base"
-											/>
-										</FormControl>
-										<FormMessage className="text-red-500 text-sm" />
-									</FormItem>
-								)}
-							/>
-
-							<Button
-								type="submit"
-								className="h-12 w-full md:w-auto px-6 bg-indigo-600 hover:bg-indigo-700 text-white text-base font-medium rounded-md shadow"
-							>
-								<Plus className="w-4 h-4 mr-2" /> Adicionar
-							</Button>
-						</div>
-
-						<div className="overflow-x-auto border rounded-xl">
-							<Table className="min-w-full text-sm">
-								<TableCaption className="text-gray-500 mt-2">
-									Lista de cores cadastradas
-								</TableCaption>
-								<TableHeader className="bg-gray-100 sticky top-0 z-10">
-									<TableRow>
-										<TableHead className="text-center not-md:hidden">ID</TableHead>
-										<TableHead className="text-center">Descrição</TableHead>
-										<TableHead className="text-center not-md:hidden">Criado por</TableHead>
-										<TableHead className="text-center not-md:hidden">Criado em</TableHead>
-										<TableHead className="text-center not-md:hidden">Alterado por</TableHead>
-										<TableHead className="text-center not-md:hidden">Alterado em</TableHead>
-										<TableHead className="text-center">Ações</TableHead>
-									</TableRow>
-								</TableHeader>
-								<TableBody>
-									<MakeTableRow />
-								</TableBody>
-							</Table>
-						</div>
-					</CardContent>
+					</div>
 				</Card>
 			</form>
-		</Form>
-	);
+
+			<Card className="rounded-xl border bg-card shadow-sm p-4">
+				<Table>
+					<TableCaption className="text-muted-foreground text-sm">
+						Lista de cores cadastradas
+					</TableCaption>
+					<TableHeader>
+						<TableRow>
+							<TableHead className="hidden md:table-cell">ID</TableHead>
+							<TableHead>Descrição</TableHead>
+							<TableHead className="hidden lg:table-cell">Criado por</TableHead>
+							<TableHead className="hidden lg:table-cell">Criado em</TableHead>
+							<TableHead className="hidden xl:table-cell">Alterado por</TableHead>
+							<TableHead className="hidden xl:table-cell">Alterado em</TableHead>
+							<TableHead className="text-center">Excluir</TableHead>
+						</TableRow>
+					</TableHeader>
+					<TableBody>
+						<MakeTableRow />
+					</TableBody>
+				</Table>
+			</Card>
+		</div>
+	</Form>
+
+
 }

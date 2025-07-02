@@ -100,65 +100,104 @@ export default function FormVehicleCategory() {
 	}, []);
 
 	const MakeTableRow = () => {
-		return useVehicleCategoryData.map(({ idVehicleCategory, description, createdAt, createdBy, updatedAt, updatedBy }: VehicleCategory) => (
-			<TableRow key={idVehicleCategory}>
-				<TableCell className="text-center not-md:hidden">{idVehicleCategory}</TableCell>
-				<TableCell className="text-center">{description}</TableCell>
-				<TableCell className="text-center not-md:hidden">{createdBy}</TableCell>
-				<TableCell className="text-center not-md:hidden">{createdAt ? new Date(createdAt).toLocaleDateString("pt-BR") : ""}</TableCell>
-				<TableCell className="text-center not-md:hidden">{updatedBy}</TableCell>
-				<TableCell className="text-center not-md:hidden">{updatedAt ? new Date(updatedAt).toLocaleDateString("pt-BR") : ""}</TableCell>
-				<TableCell className="text-center">
-					<div className="flex justify-center items-center">
-						<Trash2 />
-					</div>
-				</TableCell>
-			</TableRow>
-		));
-	}
+		return useVehicleCategoryData.map(
+			({
+				idVehicleCategory,
+				description,
+				createdAt,
+				createdBy,
+				updatedAt,
+				updatedBy,
+			}: VehicleCategory) => (
+				<TableRow key={idVehicleCategory}>
+					<TableCell className="hidden md:table-cell">{idVehicleCategory}</TableCell>
+					<TableCell>{description}</TableCell>
+					<TableCell className="hidden lg:table-cell">{createdBy}</TableCell>
+					<TableCell className="hidden lg:table-cell">
+						{createdAt ? new Date(createdAt).toLocaleDateString("pt-BR") : ""}
+					</TableCell>
+					<TableCell className="hidden xl:table-cell">{updatedBy}</TableCell>
+					<TableCell className="hidden xl:table-cell">
+						{updatedAt ? new Date(updatedAt).toLocaleDateString("pt-BR") : ""}
+					</TableCell>
+					<TableCell className="text-center">
+						<Button
+							variant="ghost"
+							size="icon"
+							className="text-destructive hover:bg-destructive/10"
+							// onClick={() => handleDelete(idVehicleCategory)}
+						>
+							<Trash2 className="w-4 h-4" />
+						</Button>
+					</TableCell>
+				</TableRow>
+			)
+		);
+	};
+
 
 	return <Form {...useSetFormVehicleCategory}>
 		<Toaster />
-		<form onSubmit={useSetFormVehicleCategory.handleSubmit(onSubmit)} className="grid gap-12 mt-8">
-			<Card className="shadow-md border border-blue-200 bg-[#f8f8f8]">
-				<CardHeader className="bg-indigo-50">
-					<CardTitle className="text-xl text-[#626464]"> CADASTRO DE CATEGORIA DE VEÍCULOS</CardTitle>
-				</CardHeader>
-				<CardContent className="grid md:grid-cols-2 gap-6">
-					<FormField control={useSetFormVehicleCategory.control} name="description" render={({ field }) => (
-						<FormItem>
-							<FormControl>
-								<Input placeholder="Descrição" {...field} />
-							</FormControl>
-							<FormMessage className="text-red-500" />
-						</FormItem>
-					)} />
-					<Button type="submit" className="px-10 py-4 border text-[#626464] hover:bg-[#626464] hover:text-white bg-white">
-						<Plus className="w-4 h-4 mr-2" /> Adicionar
-					</Button>
-				</CardContent>
-				<div className="overflow-x-auto rounded-md border border-gray-200 m-5">
-					<div className=" max-h-[400px] overflow-x-scroll overflow-y-scroll">
-						<Table className="w-full text-sm text-left text-gray-500">
-							<TableCaption>Lista das fabricantes adicionadas.</TableCaption>
-							<TableHeader>
-								<TableRow>
-									<TableHead className="text-center text-md not-md:hidden">Id</TableHead>
-									<TableHead className="text-center text-md">Nome</TableHead>
-									<TableHead className="text-center text-md not-md:hidden">Criado por</TableHead>
-									<TableHead className="text-center text-md not-md:hidden">Criado em</TableHead>
-									<TableHead className="text-center text-md not-md:hidden">Alterado por</TableHead>
-									<TableHead className="text-center text-md not-md:hidden">Alterado em</TableHead>
-									<TableHead className="text-center text-md ">Excluir</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								<MakeTableRow />
-							</TableBody>
-						</Table>
+
+		<div className="w-full max-w-3xl mx-auto px-4 py-8 space-y-6">
+			<div className="text-center">
+				<h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+					Cadastro de Categoria de Veículos
+				</h2>
+				<p className="mt-2 text-muted-foreground text-sm sm:text-base">
+					Adicione e gerencie as categorias disponíveis
+				</p>
+			</div>
+
+			<form onSubmit={useSetFormVehicleCategory.handleSubmit(onSubmit)}>
+				<Card className="rounded-xl border bg-card shadow-sm p-6 space-y-4">
+					<div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-4">
+						<FormField
+							control={useSetFormVehicleCategory.control}
+							name="description"
+							render={({ field }) => (
+								<FormItem className="w-full">
+									<FormControl>
+										<Input
+											placeholder="Descrição da categoria"
+											{...field}
+											className="rounded-lg"
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<Button type="submit" className="w-full sm:w-auto h-full">
+							<Plus className="w-4 h-4 mr-2" />
+							Adicionar
+						</Button>
 					</div>
-				</div>
+				</Card>
+			</form>
+
+			<Card className="rounded-xl border bg-card shadow-sm p-4">
+				<Table>
+					<TableCaption className="text-muted-foreground text-sm">
+						Lista das categorias cadastradas
+					</TableCaption>
+					<TableHeader>
+						<TableRow>
+							<TableHead className="hidden md:table-cell">ID</TableHead>
+							<TableHead>Nome</TableHead>
+							<TableHead className="hidden lg:table-cell">Criado por</TableHead>
+							<TableHead className="hidden lg:table-cell">Criado em</TableHead>
+							<TableHead className="hidden xl:table-cell">Alterado por</TableHead>
+							<TableHead className="hidden xl:table-cell">Alterado em</TableHead>
+							<TableHead className="text-center">Excluir</TableHead>
+						</TableRow>
+					</TableHeader>
+					<TableBody>
+						<MakeTableRow />
+					</TableBody>
+				</Table>
 			</Card>
-		</form>
+		</div>
 	</Form>
+
 }

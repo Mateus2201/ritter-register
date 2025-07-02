@@ -1,35 +1,18 @@
 'use client'
 
-import Color from "@/types/Color";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useColors } from "@/hooks/use-colors";
-import Manufacturer from "@/types/Manufacturer";
 import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
-import UploadImages from "@/components/images-upload";
-import { FormDataCar } from "@/schema-forms/form-car";
-import { useManufacturer } from "@/hooks/use-manufacturer";
-import SelectComponent from "@/components/select-component";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import Optional from "@/types/Optional";
-import { Separator } from "@/components/ui/separator";
+import { Card } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem } from "@/components/ui/form";
 import { useOptional } from "@/hooks/use-optional";
 import { useOptionalCategory } from "@/hooks/use-optional-category";
 import OptionalCategory from "@/types/OptionalCategory";
-import { Switch } from "@radix-ui/react-switch";
-import { useVehicleCategory } from "@/hooks/use-vehicle-category";
-import VehicleCategory from "@/types/VehicleCategory";
-import Vehicle from "@/types/Vehicle";
-import { useVehicle } from "@/hooks/use-vehicle";
 import { toast, Toaster } from "sonner";
-import { useRouter } from 'next/navigation'
 import { FormDataVehiclesOptional } from "@/schema-forms/form-vehicles-optionals";
 import VehicleOptional from "@/types/VehicleOptional";
 import { useVehicleOptional } from "@/hooks/use-vehicle-optional";
+import { Switch } from "@/components/ui/switch";
 
 interface VehicleProps {
     idVehicle?: string
@@ -119,10 +102,10 @@ export default function FormVehicleOptional({ idVehicle }: VehicleProps) {
 
     return <Form {...useSetFormVehiclesOptional}>
         <Toaster />
-        <form onSubmit={useSetFormVehiclesOptional.handleSubmit(onSubmit)} className="grid gap-12">
+        <form onSubmit={useSetFormVehiclesOptional.handleSubmit(onSubmit)} className="grid gap-5">
             <Card className="shadow-md border mt-5 bg-[#f8f8f8] p-5">
                 <Card className="w-full p-5 space-y-6 grid gap-10 md:grid-cols-2">
-                    {useOptionalCategoryData.map((category) =>
+                    {useOptionalCategoryData.length ? useOptionalCategoryData.map((category) =>
                         category.optional.length > 0 ? (
                             <div key={category.idOptionalCategory}>
                                 <h3 className="text-lg font-semibold text-[#3d3d3d] mb-4 border-b pb-2">
@@ -142,7 +125,7 @@ export default function FormVehicleOptional({ idVehicle }: VehicleProps) {
                                                         key={optional.idOptional}
                                                     >
                                                         <FormControl>
-                                                            <Checkbox
+                                                            <Switch
                                                                 id={`optional-${optional.idOptional}`}
                                                                 checked={isChecked}
                                                                 onCheckedChange={(checked) => {
@@ -167,13 +150,21 @@ export default function FormVehicleOptional({ idVehicle }: VehicleProps) {
                                     ))}
                                 </div>
                             </div>
-                        ) : null
-                    )}
+                        ) : <div key={category.idOptionalCategory} className="mb-4">
+                            <h3 className="text-lg font-semibold text-[#3d3d3d] mb-4 border-b pb-2">
+                                {category.description}
+                            </h3>
+                            <p className="text-sm text-gray-500">Nenhum opcional disponível.</p>
+                        </div>
+                    ) : <div className="text-gray-500">
+                        <p className="text-sm">Nenhum opcional disponível.</p>
+                    </div>}
                 </Card>
+
             </Card>
-            <div className="flex justify-end">
-                <Button type="submit" className="px-10 py-4 text-lg bg-[#626464] hover:bg-[#626464] text-white">Salvar Opcionais</Button>
-            </div>
+            <Button type="submit" className="border text-lg text-white bg-background hover:bg-white hover:text-background transition-colors duration-300" >
+                Salvar Opcionais
+            </Button>
         </form>
     </Form>
 

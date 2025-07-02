@@ -90,64 +90,98 @@ export default function FormOptionalCategory() {
 			});
 	}, [useLoading]);
 
+
 	const MakeTableRow = () => {
-		return useOptionalCategorys.map(({ idOptionalCategory, description, createdAt, createdBy, updatedAt, updatedBy }: OptionalCategory) => (
-			<TableRow key={idOptionalCategory}>
-				<TableCell className="text-center not-md:hidden">{idOptionalCategory}</TableCell>
-				<TableCell className="text-center">{description}</TableCell>
-				<TableCell className="text-center not-md:hidden">{createdBy}</TableCell>
-				<TableCell className="text-center not-md:hidden">{createdAt ? new Date(createdAt).toLocaleDateString("pt-BR") : ""}</TableCell>
-				<TableCell className="text-center not-md:hidden">{updatedBy}</TableCell>
-				<TableCell className="text-center not-md:hidden">{updatedAt ? new Date(updatedAt).toLocaleDateString("pt-BR") : ""}</TableCell>
-				<TableCell className="text-center">
-					<div className="flex justify-center items-center">
-						<Trash2 />
-					</div>
-				</TableCell>
-			</TableRow>
-		));
-	}
+		return useOptionalCategorys.map(
+			({
+				idOptionalCategory, description, createdAt, createdBy, updatedAt, updatedBy
+			}: OptionalCategory) => (
+				<TableRow key={idOptionalCategory}>
+					<TableCell className="hidden md:table-cell text-center">
+						{idOptionalCategory}
+					</TableCell>
+					<TableCell className="text-center">{description}</TableCell>
+					<TableCell className="hidden lg:table-cell text-center">
+						{createdBy}
+					</TableCell>
+					<TableCell className="hidden lg:table-cell text-center">
+						{createdAt ? new Date(createdAt).toLocaleDateString("pt-BR") : ""}
+					</TableCell>
+					<TableCell className="hidden xl:table-cell text-center">
+						{updatedBy}
+					</TableCell>
+					<TableCell className="hidden xl:table-cell text-center">
+						{updatedAt ? new Date(updatedAt).toLocaleDateString("pt-BR") : ""}
+					</TableCell>
+					<TableCell className="text-center">
+						<Button
+							variant="ghost"
+							size="icon"
+							className="text-destructive hover:bg-destructive/10"
+						>
+							<Trash2 className="w-4 h-4" />
+						</Button>
+					</TableCell>
+				</TableRow>
+			)
+		);
+	};
 
 	return <Form {...useSetFormOptionalCategory}>
 		<Toaster />
-		<form onSubmit={useSetFormOptionalCategory.handleSubmit(onSubmit)} className="grid gap-12 ">
-			<Card className="shadow-md border border-blue-200 bg-[#f8f8f8]">
-				<CardHeader className="bg-indigo-50">
-					<CardTitle className="text-xl text-[#626464]">CADASTRO DE CATEGORIA DOS OPCIONAIS</CardTitle>
-				</CardHeader>
-				<CardContent className="grid md:grid-cols-2 gap-6">
-					<FormField control={useSetFormOptionalCategory.control} name="description" render={({ field }) => (
-						<FormItem>
-							<FormControl><Input placeholder="Descrição" {...field} /></FormControl>
-							<FormMessage className="text-red-500" />
-						</FormItem>
-					)} />
-					<Button type="submit" className="px-10 py-4 border text-[#626464] hover:bg-[#626464] hover:text-white bg-white">
-						<Plus className="w-4 h-4 mr-2" /> Adicionar
-					</Button>
-				</CardContent>
-				<div className="rounded-md border border-gray-200 m-5">
-					<div className=" max-h-[400px] overflow-x-scroll overflow-y-scroll">
-						<Table className="w-full text-sm text-left text-gray-500">
-							<TableCaption>Lista das categorias adicionadas.</TableCaption>
-							<TableHeader>
-								<TableRow>
-									<TableHead className="text-center not-md:hidden text-md">Id</TableHead>
-									<TableHead className="text-center text-md">Descrição</TableHead>
-									<TableHead className="text-center not-md:hidden text-md">Criado por</TableHead>
-									<TableHead className="text-center not-md:hidden text-md">Criado em</TableHead>
-									<TableHead className="text-center not-md:hidden text-md">Alterado por</TableHead>
-									<TableHead className="text-center not-md:hidden text-md">Alterado em</TableHead>
-									<TableHead className="text-center text-md">Excluir</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								<MakeTableRow />
-							</TableBody>
-						</Table>
+		<div className="w-full max-w-3xl mx-auto px-4 py-8 space-y-6">
+			<div className="text-center">
+				<h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+					Cadastro de Categoria de Opcionais
+				</h2>
+				<p className="mt-2 text-muted-foreground text-sm sm:text-base">
+					Adicione e gerencie as categorias no sistema
+				</p>
+			</div>
+			<form onSubmit={useSetFormOptionalCategory.handleSubmit(onSubmit)}>
+				<Card className="rounded-xl border bg-card shadow-sm p-6 space-y-4">
+					<div className="grid lg:grid-cols-2 gap-4">
+						<FormField
+							control={useSetFormOptionalCategory.control}
+							name="description"
+							render={({ field }) => (
+								<FormItem>
+									<FormControl>
+										<Input placeholder="Descrição da categoria" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<Button type="submit" className="w-full sm:w-auto h-full">
+							<Plus className="w-4 h-4 mr-2" />
+							Adicionar
+						</Button>
 					</div>
-				</div>
+				</Card>
+			</form>
+			<Card className="rounded-xl border bg-card shadow-sm p-4">
+				<Table>
+					<TableCaption className="text-muted-foreground text-sm">
+						Lista das categorias adicionadas
+					</TableCaption>
+					<TableHeader>
+						<TableRow>
+							<TableHead className="hidden md:table-cell text-center">ID</TableHead>
+							<TableHead className="text-center">Descrição</TableHead>
+							<TableHead className="hidden lg:table-cell text-center">Criado por</TableHead>
+							<TableHead className="hidden lg:table-cell text-center">Criado em</TableHead>
+							<TableHead className="hidden xl:table-cell text-center">Alterado por</TableHead>
+							<TableHead className="hidden xl:table-cell text-center">Alterado em</TableHead>
+							<TableHead className="text-center">Excluir</TableHead>
+						</TableRow>
+					</TableHeader>
+					<TableBody>
+						<MakeTableRow />
+					</TableBody>
+				</Table>
 			</Card>
-		</form>
+		</div>
+
 	</Form>
 }

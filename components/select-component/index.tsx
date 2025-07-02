@@ -13,7 +13,7 @@ interface Option {
 }
 
 interface SelectComponentProps {
-    label: string
+    label?: string
     id: string
     onChange?: (value: string) => void
     value: string | number
