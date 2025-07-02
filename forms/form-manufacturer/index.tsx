@@ -133,7 +133,7 @@ export default function FormManufacturer() {
 	return <Form {...useSetFormManufacturer}>
 		<Toaster />
 
-		<div className="w-full max-w-3xl mx-auto px-4 py-8 space-y-6">
+		<div className="w-full max-w-4xl mx-auto px-4 py-8 space-y-6">
 			<div className="text-center">
 				<h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
 					Cadastro de Fabricantes
