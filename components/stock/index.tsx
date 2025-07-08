@@ -66,10 +66,10 @@ export default function Stock() {
                         <div className="h-64 w-full relative">
                             <SwiperImages id={vehicle.idVehicle} />
                             {vehicle.sold ? (
-                                <Badge className="absolute top-4 left-4 bg-red-600 text-white">Vendido</Badge>
+                                <Badge className="absolute top-4 left-4 bg-red-600 z-6 text-white">Vendido</Badge>
                             ) : null}
                             {vehicle.featured && !vehicle.sold ? (
-                                <Badge className="absolute top-4 left-4 bg-green-600 text-white">Destaque</Badge>
+                                <Badge className="absolute top-4 left-4 bg-green-600 z-6 text-white">Destaque</Badge>
                             ) : null}
                         </div>
 
