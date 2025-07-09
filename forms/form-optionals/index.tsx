@@ -1,5 +1,18 @@
 'use client'
 
+import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import React, { useEffect, useState } from "react";
+import { FormDataOptional } from "@/schema-forms/form-optionals";
+import { Plus, Trash2 } from "lucide-react";
+import Optional from "@/types/Optional";
+import { useOptional } from "@/hooks/use-optional";
+import SelectComponent from "../../components/select-component";
+import { useOptionalCategory } from "@/hooks/use-optional-category";
+import OptionalCategory from "@/types/OptionalCategory";
+import { toast, Toaster } from "sonner";
+
 import {
 	Form,
 	FormControl,
@@ -8,12 +21,6 @@ import {
 	FormMessage
 } from "@/components/ui/form";
 
-import {
-	Card,
-	CardContent,
-	CardHeader,
-	CardTitle
-} from "@/components/ui/card";
 
 import {
 	Table,
@@ -24,19 +31,6 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import React, { use, useEffect, useState } from "react";
-import { FormDataOptional } from "@/schema-forms/form-optionals";
-import { Plus, Trash2 } from "lucide-react";
-import Optional from "@/types/Optional";
-import { useOptional } from "@/hooks/use-optional";
-import SelectComponent from "../../components/select-component";
-import { useOptionalCategory } from "@/hooks/use-optional-category";
-import OptionalCategory from "@/types/OptionalCategory";
-import { toast, Toaster } from "sonner";
-import { Label } from "@/components/ui/label";
 
 export default function FormOptional() {
 	const [useOptionalData, setOptionalData] = useState<Optional[]>([]);
@@ -141,8 +135,8 @@ export default function FormOptional() {
 					<TableCell className="hidden md:table-cell text-center">
 						{idOptional}
 					</TableCell>
-					<TableCell className="text-center">{description}</TableCell>
-					<TableCell className="text-center">
+					<TableCell className="text-center truncate">{description}</TableCell>
+					<TableCell className="text-center ">
 						{OptionalCategory?.description}
 					</TableCell>
 					<TableCell className="hidden lg:table-cell text-center">
@@ -173,7 +167,7 @@ export default function FormOptional() {
 
 	return <Form {...useSetFormOptional}>
 		<Toaster />
-		<div className="w-full max-w-4xl mx-auto px-4 py-8 space-y-6">
+		<div className="w-full max-w-7xl mx-auto px-4 py-8 space-y-6">
 			<div className="text-center">
 				<h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
 					Cadastro de Opcionais
@@ -182,7 +176,6 @@ export default function FormOptional() {
 					Adicione e gerencie Opcionais no sistema
 				</p>
 			</div>
-
 			<form onSubmit={useSetFormOptional.handleSubmit(onSubmit)}>
 				<Card className="rounded-xl border bg-card shadow-sm p-6 space-y-4">
 					<div className="grid lg:grid-cols-3 gap-4">
@@ -228,7 +221,7 @@ export default function FormOptional() {
 					</div>
 				</Card>
 			</form>
-			
+
 			<Card className="rounded-xl border bg-card shadow-sm p-4">
 				<Table>
 					<TableCaption className="text-muted-foreground text-sm">

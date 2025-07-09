@@ -404,23 +404,15 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
                             </Button>
                         }
                     </form>
-
-
-
                     {/* OPCIONAIS */}
                     <TabsContent value="opcionais">
                         <FormVehicleOptional idVehicle={idVehicle} />
                     </TabsContent>
-
-
                     {/* IMAGENS */}
                     <TabsContent value="imagens">
                         <UploadImages idVehicle={idVehicle} />
                     </TabsContent>
-
-
                 </Tabs>
-
             </div>
         </div>
     </Form >
