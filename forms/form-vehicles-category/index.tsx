@@ -49,9 +49,6 @@ export default function FormVehicleCategory() {
 			description
 		};
 
-		console.log("Dados do formulário:", newVehicleCategory);
-
-
 		createVehicleCategory(newVehicleCategory)
 			.then((response) => {
 				if (response) {

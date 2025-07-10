@@ -9,6 +9,11 @@ import SwiperImages from "@/components/swiper-images";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+
 import {
     Calendar1,
     ClipboardList,
@@ -65,14 +70,14 @@ export default function Stock() {
                         key={vehicle.idVehicle}
                     >
                         <div className="h-64 w-full relative">
-                            {/* <SwiperImages idVehicle={vehicle.idVehicle} /> */}
+                            <SwiperImages idVehicle={1} />
 
-                            {/* {vehicle.sold ? (
+                            {vehicle.sold ? (
                                 <Badge className="absolute top-4 left-4 bg-red-600 z-6 text-white">Vendido</Badge>
                             ) : null}
                             {vehicle.featured && !vehicle.sold ? (
                                 <Badge className="absolute top-4 left-4 bg-green-600 z-6 text-white">Destaque</Badge>
-                            ) : null} */}
+                            ) : null}
                         </div>
 
                         <div className="p-6 flex-1 flex flex-col justify-between">

@@ -123,15 +123,12 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
     };
 
     const onSubmit = async (data: any) => {
-        const vehicle: Vehicle = {
-            idVehicle: idVehicleState ? Number(idVehicleState) : 0,
-            ...data,
-        };
-
-        console.log("Dados do veículo a serem salvos:", vehicle);
-
-
         try {
+            const vehicle: Vehicle = {
+                idVehicle: idVehicleState ? Number(idVehicleState) : 0,
+                ...data,
+            };
+
             const response = idVehicleState
                 ? await updateVehicle(vehicle)
                 : await createVehicle(vehicle);

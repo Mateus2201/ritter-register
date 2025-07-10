@@ -50,8 +50,6 @@ export default function FormColor() {
 		createColor(newColor)
 			.then((response) => {
 				if (response) {
-					console.log("Cor criada com sucesso:", response);
-
 					setColorData((prev) => [...prev, response]);
 
 					toast("Cor incluída com sucesso!", {

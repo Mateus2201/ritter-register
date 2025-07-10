@@ -39,9 +39,7 @@ export function AppSidebar() {
 	const { logout } = useAuthContext()
 
 	const itemsWithUrl = (url?: string) => {
-		if (url) {
-			router.push(url)
-		}
+		if (url) router.push(url)
 	}
 
 	const items: MenuItem[] = [
@@ -108,7 +106,7 @@ export function AppSidebar() {
 }
 
 export default function SidebarComponent() {
-	return <SidebarProvider className="absolute w-0 border-2">
+	return <SidebarProvider defaultOpen={false} className="absolute w-0 border-2">
 		<AppSidebar />
 		<SidebarTrigger className="relative bg-[#464646] text-white" />
 	</SidebarProvider>

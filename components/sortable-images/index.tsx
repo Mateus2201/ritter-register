@@ -8,10 +8,11 @@ import { Button } from "@/components/ui/button";
 import { useSortable } from "@dnd-kit/sortable";
 
 interface SortableImageProps {
-    file: { file: File | null; name: string; previewUrl?: string | null };
+    file: { file: File | null; name: string; previewUrl: string };
     index: number;
     onRemove: (index: number) => void;
     onRename: (index: number, newName: string) => void;
+    isExisting: boolean
 }
 
 export default function SortableImage({
@@ -19,6 +20,7 @@ export default function SortableImage({
     index,
     onRemove,
     onRename,
+    isExisting
 }: SortableImageProps) {
     const {
         attributes,
@@ -35,13 +37,9 @@ export default function SortableImage({
 
     const getImageSrc = () => {
         if (file.file instanceof File) {
-            try {
-                return URL.createObjectURL(file.file);
-            } catch {
-                return "";
-            }
+            return URL.createObjectURL(file.file);
         }
-        return file.previewUrl ?? "";
+        return file.previewUrl;
     };
 
     return (
@@ -67,6 +65,7 @@ export default function SortableImage({
                     onChange={(e) => onRename(index, e.target.value)}
                     onPointerDown={(e) => e.stopPropagation()}
                     className="text-sm border rounded px-2 py-1 flex-1"
+                    disabled={isExisting}
                 />
             </div>
             <Button

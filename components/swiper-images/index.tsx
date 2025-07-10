@@ -19,10 +19,7 @@ const VehicleImageCarousel = ({ idVehicle }: VehicleImageCarouselProps) => {
     useEffect(() => {
         getAllVehicleImage(idVehicle)
             .then((data) => {
-                console.log("Imagens do veículo:", data);
-                if (data && Array.isArray(data)) {
-                    setImages(data);
-                }
+                if (data && Array.isArray(data)) setImages(data);
             })
             .catch((error) => {
                 console.error("Erro ao buscar imagens do veículo:", error);
@@ -34,7 +31,6 @@ const VehicleImageCarousel = ({ idVehicle }: VehicleImageCarouselProps) => {
         direction="horizontal"
         slidesPerView={1}
         pagination={{ clickable: true }}
-        scrollbar={{ draggable: true }}
         initialSlide={selectedIndex}
         onSwiper={setMainSwiper}
         className="w-full h-64" // <- ALTURA CLARA DEFINIDA AQUI
@@ -46,7 +42,7 @@ const VehicleImageCarousel = ({ idVehicle }: VehicleImageCarouselProps) => {
                     alt={image.name || `imagem-${index}`}
                     width={400}
                     height={300}
-                    className="object-contain rounded max-h-full max-w-full"
+                    className="object-cover rounded max-h-full max-w-full"
                     priority={index === 0}
                 />
             </SwiperSlide>

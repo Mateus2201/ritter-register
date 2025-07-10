@@ -3,7 +3,9 @@ import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import SortableImage from "../sortable-images";
 import { Card } from "../ui/card";
-import { v4 as uuidv4 } from "uuid";
+import { Button } from "../ui/button";
+import { toast } from "sonner";
+import { useVehicleImage } from "@/hooks/use-vehicle-images";
 
 import {
     DndContext,
@@ -19,10 +21,6 @@ import {
     verticalListSortingStrategy,
     horizontalListSortingStrategy
 } from "@dnd-kit/sortable";
-import { Button } from "../ui/button";
-import { toast } from "sonner";
-import publicApi from "@/lib/api";
-import { useVehicleImage } from "@/hooks/use-vehicle-images";
 
 interface VehicleProps {
     idVehicle?: string
@@ -32,14 +30,14 @@ export default function UploadImages({ idVehicle }: VehicleProps) {
     const [idVehicleState] = useState<number>(idVehicle ? Number(idVehicle) : 0)
     const [reloadImages, setReloadImages] = useState<boolean>(true);
     const sensors = useSensors(useSensor(PointerSensor));
-
     const [images, setImages] = useState<{
         id: string,
         file: File;
         name: string,
         isActive: boolean,
         isExisting: boolean,
-        previewUrl: string | null,
+        isRenamed: boolean,
+        previewUrl: string,
         order?: number;
     }[]>([]);
 
@@ -48,59 +46,81 @@ export default function UploadImages({ idVehicle }: VehicleProps) {
     useEffect(() => {
         if (!idVehicleState || !reloadImages) return;
 
-        getAllVehicleImage(idVehicleState).then((response) => {
-            console.log(response);
+        getAllVehicleImage(idVehicleState)
+            .then((response) => {
+                setImages(
+                    (response ?? []).map(({ idVehicleImage, isActive, name, secureURL }) => ({
+                        id: idVehicleImage.toString(),
+                        file: null as any,
+                        name,
+                        isActive,
+                        isRenamed: false,
+                        isExisting: true,
+                        previewUrl: secureURL,
+                    }))
+                );
 
-            setImages(
-                (response ?? []).map(({ idVehicleImage, isActive, name, secureURL }) => ({
-                    id: idVehicleImage.toString(),
-                    file: null as any,
-                    name,
-                    isActive,
-                    isExisting: true,
-                    previewUrl: secureURL,
-                }))
-            );
-
-            setReloadImages(false);
-        }).catch(toast.error)
+                setReloadImages(false);
+            })
+            .catch(toast.error)
     }, [reloadImages])
 
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
-            const newFiles = Array.from(e.target.files).map((file) => ({
-                id: uuidv4(),
+            const maxId = images.reduce((max, img) => {
+                const idNumber = Number(img.id);
+                return isNaN(idNumber) ? max : Math.max(max, idNumber);
+            }, 0);
+
+            const newFiles = Array.from(e.target.files).map((file, index) => ({
+                id: (maxId + index + 1).toString(),
                 file,
                 name: file.name,
                 isActive: true,
                 isExisting: false,
-                previewUrl: null,
-                order: images.length + 1
+                isRenamed: false,
+                previewUrl: URL.createObjectURL(file),
+                order: images.length + index + 1,
             }));
-            setImages((prev) => [...prev, ...newFiles])
+
+            setImages((prev) => [...prev, ...newFiles]);
         }
-    }
+    };
 
     const handleRemove = async (imageId: number) => {
-        deleteVehicleImage(imageId)
-            .then(() => {
-                setImages((prev) => prev.filter((img) => img.id !== imageId.toString()));
+        const imageToDelete = images.find((m) => m.id === imageId.toString());
 
-                toast.success("Imagem removida com sucesso!");
-            }).catch((error) => {
-                console.error("Erro ao remover imagem:", error);
-                toast.error("Erro ao remover imagem.");
-            })
+        if (!imageToDelete) {
+            toast.error("Imagem não encontrada.");
+            return;
+        }
+
+        if (!imageToDelete.isExisting) {
+            setImages((prev) => prev.filter((img) => img.id !== imageId.toString()));
+            toast.success("Imagem removida com sucesso!");
+            return;
+        }
+
+        try {
+            await deleteVehicleImage(Number(imageToDelete.id));
+            setImages((prev) => prev.filter((img) => img.id !== imageId.toString()));
+            toast.success("Imagem removida com sucesso!");
+        } catch (error) {
+            console.error("Erro ao remover imagem:", error);
+            toast.error("Erro ao remover imagem.");
+        }
     };
 
     const handleRename = (index: number, newName: string) => {
-        setImages((prev) => {
-            const updated = [...prev];
-            updated[index] = { ...updated[index], name: newName }
-            return updated;
-        })
-    }
+        setImages(images.map(m => {
+            if (index == Number(m.id)) {
+                m.name = newName
+                m.isRenamed = true
+            }
+            return m;
+        }));
+    };
 
     const handleDragEnd = (event: any) => {
         const { active, over } = event;
@@ -110,29 +130,45 @@ export default function UploadImages({ idVehicle }: VehicleProps) {
             const newIndex = images.findIndex((img, i) => img.name + i === over?.id);
             setImages((prev) => arrayMove(prev, oldIndex, newIndex));
         }
-    }
+    };
 
     const handleSubmit = async () => {
         if (images.length === 0) return;
 
-        const onlyNewImages = images
-            .map(({ id, file, name, isExisting }, index) => ({ id, file, name, order: index + 1, isExisting }))
-            .filter(img => !img.isExisting)
+        const renamedExisting = images
+            .filter(
+                img => img.isExisting && img.isRenamed && img.file instanceof File
+            );
 
-        if (onlyNewImages.length === 0) {
+        await Promise
+            .all(renamedExisting
+                .map(img => deleteVehicleImage(Number(img.id)))
+            );
+
+        const imagesToUpload = images
+            .filter((img) =>
+                (!img.isExisting && img.file instanceof File) ||
+                (img.isRenamed && img.file instanceof File)
+            )
+            .map(({ id, file, name }, index) => ({
+                id, file, name, order: index + 1,
+            }));
+
+
+        if (imagesToUpload.length === 0) {
             toast("Nenhuma nova imagem para enviar.");
             return;
         }
 
-        createVehicleImage(onlyNewImages, idVehicleState)
-            .then((response) => {
-                console.log(response);
-
+        createVehicleImage(imagesToUpload, idVehicleState)
+            .then(() => {
                 toast.success("Imagens enviadas com sucesso!");
-                setImages([]);
                 setReloadImages(true);
             })
-            .catch(console.log);
+            .catch((err) => {
+                console.error("Erro ao criar imagens:", err);
+                toast.error("Erro ao salvar imagens.");
+            });
     };
 
     return <div className="grid gap-5">
@@ -151,7 +187,14 @@ export default function UploadImages({ idVehicle }: VehicleProps) {
                     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                         <ul className="mt-4 space-y-2">
                             {images.map((file, index) =>
-                                <SortableImage key={file.id} file={file} index={Number(file.id)} onRemove={handleRemove} onRename={handleRename} />
+                                <SortableImage
+                                    key={file.id}
+                                    file={file}
+                                    index={Number(file.id)}
+                                    onRemove={handleRemove}
+                                    onRename={handleRename} 
+                                    isExisting={file.isExisting}
+                                    />
                             )}
                         </ul>
                     </DndContext>

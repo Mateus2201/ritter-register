@@ -8,8 +8,6 @@ export const useVehicleImage = () => {
       const response = await publicApi.get(`/cars/${id}/images`);
       const { images, fromCache } = response.data;
 
-      console.log("Response from getAllVehicleImage:", fromCache);
-
       return (images as VehicleImage[]) || [];
     } catch (error) {
       console.error("Error fetching Vehicle:", error);
@@ -26,19 +24,14 @@ export const useVehicleImage = () => {
 
       formData.append("idVehicle", idVehicle.toString());
 
-      images.forEach(({ file, name, order }, index) => {
-        formData.append("images", file, name);
-        formData.append("orders", String(order)); // sem []
-      });
+      images
+        .filter((img) => img.file instanceof File)
+        .forEach(({ file, name, order }) => {
+          formData.append("images", file, name);
+          formData.append("orders[]", String(order));
+        });
 
-      for (const pair of formData.entries()) {
-        console.log('logs', pair[0], pair[1]);
-      }
-
-      const response = await publicApi.post("/upload", formData); 
-
-
-      // console.log(response);
+      const response = await publicApi.post("/upload", formData);
 
       return response.data as VehicleImage[];
     } catch (error) {
@@ -48,8 +41,6 @@ export const useVehicleImage = () => {
 
   const updateVehicle = async (data: Vehicle) => {
     try {
-      console.log(data);
-
       const response = await publicApi.put(`/cars`, data);
 
       return (response.data as Vehicle) || null;

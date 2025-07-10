@@ -39,8 +39,6 @@ export const useVehicle = () => {
 
   const updateVehicle = async (data: Vehicle) => {
     try {
-      console.log(data);
-
       const response = await publicApi.put(`/cars`, data);
 
       return (response.data as Vehicle) || null;
