@@ -70,7 +70,7 @@ export default function Stock() {
                         key={vehicle.idVehicle}
                     >
                         <div className="h-64 w-full relative">
-                            <SwiperImages idVehicle={1} />
+                            <SwiperImages idVehicle={vehicle.idVehicle} />
 
                             {vehicle.sold ? (
                                 <Badge className="absolute top-4 left-4 bg-red-600 z-6 text-white">Vendido</Badge>
