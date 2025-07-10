@@ -43,12 +43,14 @@ export default function UploadImages({ idVehicle }: VehicleProps) {
         order?: number;
     }[]>([]);
 
-    const { createVehicleImage, getAllVehicleImage } = useVehicleImage();
+    const { createVehicleImage, getAllVehicleImage, deleteVehicleImage } = useVehicleImage();
 
     useEffect(() => {
         if (!idVehicleState || !reloadImages) return;
 
         getAllVehicleImage(idVehicleState).then((response) => {
+            console.log(response);
+
             setImages(
                 (response ?? []).map(({ idVehicleImage, isActive, name, secureURL }) => ({
                     id: idVehicleImage.toString(),
@@ -80,9 +82,17 @@ export default function UploadImages({ idVehicle }: VehicleProps) {
         }
     }
 
-    const handleRemove = (index: number) => {
-        setImages((prev) => prev.filter((_, i) => i !== index))
-    }
+    const handleRemove = async (imageId: number) => {
+        deleteVehicleImage(imageId)
+            .then(() => {
+                setImages((prev) => prev.filter((img) => img.id !== imageId.toString()));
+
+                toast.success("Imagem removida com sucesso!");
+            }).catch((error) => {
+                console.error("Erro ao remover imagem:", error);
+                toast.error("Erro ao remover imagem.");
+            })
+    };
 
     const handleRename = (index: number, newName: string) => {
         setImages((prev) => {
@@ -114,11 +124,15 @@ export default function UploadImages({ idVehicle }: VehicleProps) {
             return;
         }
 
-        createVehicleImage(onlyNewImages, idVehicleState).then((response) => {
-            toast.success("Imagens enviadas com sucesso!");
-            setImages([]);
-            setReloadImages(true);
-        }).catch(toast.error)
+        createVehicleImage(onlyNewImages, idVehicleState)
+            .then((response) => {
+                console.log(response);
+
+                toast.success("Imagens enviadas com sucesso!");
+                setImages([]);
+                setReloadImages(true);
+            })
+            .catch(console.log);
     };
 
     return <div className="grid gap-5">
@@ -137,7 +151,7 @@ export default function UploadImages({ idVehicle }: VehicleProps) {
                     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                         <ul className="mt-4 space-y-2">
                             {images.map((file, index) =>
-                                <SortableImage key={file.id} file={file} index={index} onRemove={handleRemove} onRename={handleRename} />
+                                <SortableImage key={file.id} file={file} index={Number(file.id)} onRemove={handleRemove} onRename={handleRename} />
                             )}
                         </ul>
                     </DndContext>

@@ -53,3 +53,9 @@ body {
   font-weight: 400;
   font-style: normal;
 }
+
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -4,6 +4,11 @@ import React, { useEffect, useState } from "react";
 import Vehicle from "@/types/Vehicle";
 import { useVehicle } from "@/hooks/use-vehicle";
 import Link from "next/link";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SwiperImages from "@/components/swiper-images";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+
 import {
     Calendar1,
     ClipboardList,
@@ -11,10 +16,6 @@ import {
     Gauge,
     Loader,
 } from "lucide-react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import SwiperImages from "@/components/swiper-images";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 
 export default function Stock() {
     const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -60,17 +61,18 @@ export default function Stock() {
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
                 {filteredVehicles.map((vehicle) => (
                     <div
-                        key={vehicle.idVehicle}
                         className="bg-white rounded-2xl overflow-hidden border border-gray-200 shadow-xl hover:shadow-2xl transition-transform hover:-translate-y-1 flex flex-col"
+                        key={vehicle.idVehicle}
                     >
                         <div className="h-64 w-full relative">
-                            <SwiperImages id={vehicle.idVehicle} />
-                            {vehicle.sold ? (
+                            {/* <SwiperImages idVehicle={vehicle.idVehicle} /> */}
+
+                            {/* {vehicle.sold ? (
                                 <Badge className="absolute top-4 left-4 bg-red-600 z-6 text-white">Vendido</Badge>
                             ) : null}
                             {vehicle.featured && !vehicle.sold ? (
                                 <Badge className="absolute top-4 left-4 bg-green-600 z-6 text-white">Destaque</Badge>
-                            ) : null}
+                            ) : null} */}
                         </div>
 
                         <div className="p-6 flex-1 flex flex-col justify-between">

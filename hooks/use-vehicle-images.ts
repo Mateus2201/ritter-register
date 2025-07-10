@@ -26,18 +26,23 @@ export const useVehicleImage = () => {
 
       formData.append("idVehicle", idVehicle.toString());
 
-      images.forEach(({ file, name, order }) => {
+      images.forEach(({ file, name, order }, index) => {
         formData.append("images", file, name);
-        formData.append("orders", String(order));
+        formData.append("orders", String(order)); // sem []
       });
 
-      const response = await publicApi.post("/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      for (const pair of formData.entries()) {
+        console.log('logs', pair[0], pair[1]);
+      }
+
+      const response = await publicApi.post("/upload", formData); 
+
+
+      // console.log(response);
 
       return response.data as VehicleImage[];
     } catch (error) {
-      console.error("Erro ao salvar imagens:", error);
+      console.log(error);
     }
   };
 
@@ -54,9 +59,20 @@ export const useVehicleImage = () => {
     }
   };
 
+  const deleteVehicleImage = async (id: number) => {
+    try {
+      const response = await publicApi.delete(`/cars-image/${id}/images`);
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting Vehicle Image:", error);
+      throw error;
+    }
+  };
+
   return {
     getAllVehicleImage,
     createVehicleImage,
     updateVehicle,
+    deleteVehicleImage,
   };
 };
