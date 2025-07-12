@@ -40,8 +40,8 @@ export default function Stock() {
         let filtered = vehicles;
 
         if (tab === "blindado") filtered = vehicles.filter(v => v.armored);
-        if (tab === "troca") filtered = vehicles.filter(v => v.allowsTrade);
-        if (tab === "disponivel") filtered = vehicles.filter(v => !v.sold);
+        if (tab === "classico") filtered = vehicles.filter(v => v.classic);
+        if (tab === "vendidos") filtered = vehicles.filter(v => v.sold);
 
         setFilteredVehicles(filtered);
     }, [tab, vehicles]);
@@ -57,8 +57,8 @@ export default function Stock() {
                 <TabsList className="grid grid-cols-4 w-full not-lg:h-max h-min space-x-5 gap-2">
                     <TabsTrigger className="data-[state=active]:text-white w-full" value="all">Todos</TabsTrigger>
                     <TabsTrigger className="data-[state=active]:text-white w-full" value="blindado">Blindados</TabsTrigger>
-                    <TabsTrigger className="data-[state=active]:text-white w-full" value="troca">Aceita troca</TabsTrigger>
-                    <TabsTrigger className="data-[state=active]:text-white w-full" value="disponivel">Disponíveis</TabsTrigger>
+                    <TabsTrigger className="data-[state=active]:text-white w-full" value="classico">Clássicos</TabsTrigger>
+                    <TabsTrigger className="data-[state=active]:text-white w-full" value="vendidos">Vendidos</TabsTrigger>
                 </TabsList>
             </Tabs>
 
