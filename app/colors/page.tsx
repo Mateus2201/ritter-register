@@ -6,8 +6,6 @@ import FormColor from '@/forms/form-color'
 export default function PageColors() {
 	return <PrivateRoute>
 		<SidebarComponent />
-
 		<FormColor />
-
 	</PrivateRoute>
 }

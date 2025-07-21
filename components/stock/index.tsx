@@ -26,7 +26,7 @@ export default function Stock() {
     const [vehicles, setVehicles] = useState<Vehicle[]>([]);
     const [filteredVehicles, setFilteredVehicles] = useState<Vehicle[]>([]);
     const [loader, setLoader] = useState(false);
-    const [tab, setTab] = useState("all");
+    const [tab, setTab] = useState("disponivel");
     const { getAllVehicle } = useVehicle();
 
     useEffect(() => {
@@ -42,6 +42,7 @@ export default function Stock() {
         if (tab === "blindado") filtered = vehicles.filter(v => v.armored);
         if (tab === "classico") filtered = vehicles.filter(v => v.classic);
         if (tab === "vendidos") filtered = vehicles.filter(v => v.sold);
+        if (tab === "disponivel") filtered = vehicles.filter(v => !v.sold);
 
         setFilteredVehicles(filtered);
     }, [tab, vehicles]);
@@ -55,7 +56,7 @@ export default function Stock() {
             {/* Filtros em Tabs */}
             <Tabs value={tab} onValueChange={setTab} className="mb-8 flex justify-center">
                 <TabsList className="grid grid-cols-4 w-full not-lg:h-max h-min space-x-5 gap-2">
-                    <TabsTrigger className="data-[state=active]:text-white w-full" value="all">Todos</TabsTrigger>
+                    <TabsTrigger className="data-[state=active]:text-white w-full" value="disponivel">Disponíveis</TabsTrigger>
                     <TabsTrigger className="data-[state=active]:text-white w-full" value="blindado">Blindados</TabsTrigger>
                     <TabsTrigger className="data-[state=active]:text-white w-full" value="classico">Clássicos</TabsTrigger>
                     <TabsTrigger className="data-[state=active]:text-white w-full" value="vendidos">Vendidos</TabsTrigger>
@@ -85,8 +86,10 @@ export default function Stock() {
                                 <div className="flex justify-between items-center mb-3">
                                     <h2 className="text-xl font-bold text-gray-800">{vehicle.model}</h2>
                                     <p className="text-lg font-semibold text-indigo-600">
-                                        {vehicle.priceDisplay
-                                            ? `R$ ${vehicle.price.toLocaleString("pt-BR")}`
+                                        {vehicle.price ? Number(vehicle?.price).toLocaleString('pt-BR', {
+                                            style: 'currency',
+                                            currency: 'BRL'
+                                        })
                                             : "Sob consulta"}
                                     </p>
                                 </div>

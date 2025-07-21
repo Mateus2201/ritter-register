@@ -145,50 +145,52 @@ export default function FormVehicleOptional({ idVehicle }: VehicleProps) {
                     </div>
                 </div>
 
-                <div className="grid gap-8 md:grid-cols-2">
-                    {groupedFilteredData.length ? (
-                        groupedFilteredData.map(category => (
-                            <div key={category.idOptionalCategory}>
-                                <h3 className="text-lg font-semibold mb-3 border-b pb-1 text-[#3d3d3d]">
-                                    {category.description}
-                                </h3>
-                                <div className="space-y-2">
-                                    {category.optionals.map(optional => (
-                                        <FormField
-                                            key={optional.idOptional}
-                                            control={useSetFormVehiclesOptional.control}
-                                            name="optionals"
-                                            render={({ field }) => {
-                                                const isChecked = field.value?.includes(optional.idOptional);
-                                                return (
-                                                    <FormItem className="flex items-center gap-3">
-                                                        <FormControl>
-                                                            <Switch
-                                                                checked={isChecked}
-                                                                onCheckedChange={(checked) => {
-                                                                    const current = field.value || [];
-                                                                    if (checked && !current.includes(optional.idOptional)) {
-                                                                        field.onChange([...current, optional.idOptional]);
-                                                                    } else {
-                                                                        field.onChange(current.filter(id => id !== optional.idOptional));
-                                                                    }
-                                                                }}
-                                                                className="data-[state=checked]:bg-[#626464] data-[state=unchecked]:bg-gray-300"
-                                                            />
-                                                        </FormControl>
-                                                        <Label className="text-sm">{optional.description}</Label>
-                                                    </FormItem>
-                                                );
-                                            }}
-                                        />
-                                    ))}
-                                </div>
+                {groupedFilteredData.length ? <div className="grid gap-8 md:grid-cols-2">
+                    {groupedFilteredData.map(category => (
+                        <div key={category.idOptionalCategory}>
+                            <h3 className="text-lg font-semibold mb-3 border-b pb-1 text-[#3d3d3d]">
+                                {category.description}
+                            </h3>
+                            <div className="space-y-2">
+                                {category.optionals.sort((a, b) => a.description.localeCompare(b.description)).map(optional => (
+                                    <FormField
+                                        key={optional.idOptional}
+                                        control={useSetFormVehiclesOptional.control}
+                                        name="optionals"
+                                        render={({ field }) => {
+                                            const isChecked = field.value?.includes(optional.idOptional);
+                                            return (
+                                                <FormItem className="flex items-center gap-3">
+                                                    <FormControl>
+                                                        <Switch
+                                                            checked={isChecked}
+                                                            onCheckedChange={(checked) => {
+                                                                const current = field.value || [];
+                                                                if (checked && !current.includes(optional.idOptional)) {
+                                                                    field.onChange([...current, optional.idOptional]);
+                                                                } else {
+                                                                    field.onChange(current.filter(id => id !== optional.idOptional));
+                                                                }
+                                                            }}
+                                                            className="data-[state=checked]:bg-[#626464] data-[state=unchecked]:bg-gray-300"
+                                                        />
+                                                    </FormControl>
+                                                    <Label className="text-sm">{optional.description}</Label>
+                                                </FormItem>
+                                            );
+                                        }}
+                                    />
+                                ))}
                             </div>
-                        ))
-                    ) : (
-                        <p className="text-gray-500 text-sm col-span-2">Nenhum opcional encontrado...</p>
-                    )}
-                </div>
+                        </div>
+                    ))}
+                </div> : <div className="w-full flex flex-col items-center justify-center gap-4 ">
+                    <svg className="animate-spin h-12 w-12 text-primary" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                    </svg>
+                    <span className="text-muted-foreground text-lg">Carregando os dados...</span>
+                </div>}
             </Card>
 
             <Button

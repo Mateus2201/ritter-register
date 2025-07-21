@@ -95,6 +95,7 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
     const [useOptionalData, setOptionalData] = useState<Optional[]>([]);
     const [useOptionalCategoryData, setOptionalCategoryData] = useState<OptionalCategory[]>([]);
     const [useVehicleCategoryData, setVehicleCategoryData] = useState<VehicleCategory[]>([]);
+    const [formReady, setFormReady] = useState(false);
 
     const { useSetForm } = FormDataCar()
 
@@ -141,7 +142,10 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
 
     useEffect(() => {
         const loadVehicle = async () => {
-            if (!idVehicleState) return;
+            if (!idVehicleState) {
+                setFormReady(true);
+                return;
+            }
 
             const [
                 colors,
@@ -162,6 +166,8 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
             if (vehicleData) {
                 useSetForm.reset(vehicleData);
             }
+
+            setFormReady(true);
         };
 
         loadVehicle().catch((err) => {
@@ -196,7 +202,6 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
         fetchInitialData();
     }, []);
 
-
     useEffect(() => {
         getAllColors({})
             .then(setUseColorData)
@@ -216,6 +221,7 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
                 console.log(err);
             })
     }, []);
+
     useEffect(() => {
         getAllVehicleCategory({})
             .then(setVehicleCategoryData)
@@ -225,7 +231,7 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
             })
     }, []);
 
-    return <Form {...useSetForm}>
+    return (formReady ? <Form {...useSetForm}>
         <Toaster />
         <div className="w-full max-w-4xl mx-auto px-4 py-8 space-y-6">
             <div className="text-center">
@@ -328,6 +334,11 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
                                                             { value: "Álcool", description: "Álcool" },
                                                             { value: "Flex", description: "Flex" },
                                                             { value: "Diesel", description: "Diesel" },
+                                                            { value: "GNV", description: "GNV" },
+                                                            { value: "GNV/ Flex", description: "GNV/ Flex" },
+                                                            { value: "GNV/ Gasolina", description: "GNV/ Gasolina" },
+                                                            { value: "Elétrico", description: "Elétrico" },
+                                                            { value: "Híbrido", description: "Híbrido" },
                                                         ]}
                                                     />
                                                 </FormControl>
@@ -412,7 +423,12 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
                 </Tabs>
             </div>
         </div>
-    </Form >
-
+    </Form > : <div className="w-full h-screen flex flex-col items-center justify-center gap-4 ">
+        <svg className="animate-spin h-12 w-12 text-primary" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+        </svg>
+        <span className="text-muted-foreground text-lg">Carregando os dados...</span>
+    </div>)
 
 }

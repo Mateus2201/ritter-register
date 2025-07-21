@@ -12,9 +12,14 @@ import DialogType from '@/types/dialogs'
 import { useAuth } from '@/hooks/use-auth'
 import { FormDataRegister } from '@/schema-forms/form-register'
 import { useRouter } from 'next/navigation'
+import Image from 'next/image'
+import logo from "@/public/logo.png";
 
+interface RegisterComponentProps {
+    children: React.ReactNode
+}
 
-export default function RegisterComponent() {
+export default function RegisterComponent({ children }: RegisterComponentProps) {
     const router = useRouter()
 
     const [loading, setLoading] = useState<boolean>(false)
@@ -45,74 +50,80 @@ export default function RegisterComponent() {
     }
 
     return <Form {...useSetFormRegister} >
-        <form onSubmit={useSetFormRegister.handleSubmit(onSubmit)} className="flex flex-col gap-4 p-4 max-w-md mx-auto ">
-            <h1 className="text-2xl font-bold text-center">Cadastro</h1>
-            <AlertComponent {...propsRegister} />
-            <FormField
-                control={useSetFormRegister.control}
-                name="name"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Nome</FormLabel>
-                        <FormControl>
-                            <Input
-                                type="text"
-                                placeholder="Nome"
-                                required
-                                className="border p-2 rounded"
-                                {...field}
-                            />
-                        </FormControl>
-                        <FormMessage className='text-md text-red-700' />
-                    </FormItem>
-                )}
-            />
-            <FormField
-                control={useSetFormRegister.control}
-                name="username"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Login</FormLabel>
-                        <FormControl>
-                            <Input
-                                type="text"
-                                placeholder="Login"
-                                required
-                                className="border border-accent outline-sky-50 p-2 rounded"
-                                {...field}
-                            />
-                        </FormControl>
-                        <FormMessage className='text-red' />
-                    </FormItem>
-                )}
-            />
-            <FormField
-                control={useSetFormRegister.control}
-                name="password"
-                render={({ field }) => (
-                    <FormItem>
-                        <FormLabel>Senha</FormLabel>
-                        <FormControl>
-                            <Input
-                                type="password"
-                                placeholder="Senha"
-                                required
-                                className="border p-2 rounded"
-                                {...field}
-                            />
-                        </FormControl>
-                        <FormMessage className='text-red' />
-                    </FormItem>
-                )}
-            />
-            <Button
-                type="submit"
-                disabled={loading}
-                className="bg-blue-800 text-white p-2 rounded hover:bg-blue-700"
-            >
-                {loading ? 'Cadastrando...' : 'Cadastrar'}
-            </Button>
+        <AlertComponent {...propsRegister} />
+        <form onSubmit={useSetFormRegister.handleSubmit(onSubmit)} className="flex flex-col gap-4 p-3 h-full max-w-md mx-auto justify-between " >
+            <Image src={logo} alt="w" className="w-full" />
+
+            <div className='flex flex-col justify-center bg-white p-5 rounded-xl w-full gap-y-5 my-10'>
+
+                <FormField
+                    control={useSetFormRegister.control}
+                    name="name"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Nome</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="text"
+                                    placeholder="Nome"
+                                    required
+                                    className="border p-2 rounded"
+                                    {...field}
+                                />
+                            </FormControl>
+                            <FormMessage className='text-md text-red-700' />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={useSetFormRegister.control}
+                    name="username"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Login</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="text"
+                                    placeholder="Login"
+                                    required
+                                    className="border border-accent outline-sky-50 p-2 rounded"
+                                    {...field}
+                                />
+                            </FormControl>
+                            <FormMessage className='text-red' />
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={useSetFormRegister.control}
+                    name="password"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Senha</FormLabel>
+                            <FormControl>
+                                <Input
+                                    type="password"
+                                    placeholder="Senha"
+                                    required
+                                    className="border p-2 rounded"
+                                    {...field}
+                                />
+                            </FormControl>
+                            <FormMessage className='text-red' />
+                        </FormItem>
+                    )}
+                />
+                <Button
+                    type="submit"
+                    disabled={loading}
+                    className="bg-blue-800 text-white p-2 rounded hover:bg-blue-700"
+                >
+                    {loading ? 'Cadastrando...' : 'Cadastrar'}
+                </Button>
+            </div>
+            {children}
+
         </form>
-    </Form>
+    </Form >
 
 }
