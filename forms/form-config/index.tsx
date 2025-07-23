@@ -129,11 +129,9 @@ export default function FormConfig() {
 
 		formData.append("folder", "registro-site");
 		publicApi.post("/upload-site", formData)
-			.then((response) => {
-				console.log(response);
-
+			.then(({ data }) => {
+				setReloadImages(!reloadImages)
 				toast.success("Imagens enviadas com sucesso!");
-				setImages([]);
 			}).catch((error) => {
 				console.error("Erro ao enviar imagens:", error);
 				toast.error("Erro ao enviar imagens.");
@@ -161,7 +159,7 @@ export default function FormConfig() {
 				console.error("Erro ao enviar imagens:", error);
 				toast.error("Erro ao enviar imagens.");
 			});
-	}, [])
+	}, [reloadImages])
 
 	return <div className="w-full max-w-4xl mx-auto px-4 py-8 space-y-6">
 		<Toaster />
