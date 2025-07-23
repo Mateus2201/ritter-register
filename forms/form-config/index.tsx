@@ -176,44 +176,36 @@ export default function FormConfig() {
 
 		<div className="grid gap-5">
 			<Tabs defaultValue="dados" value={selectedTab} onValueChange={setSelectedTab}>
-				<TabsList className={`grid lg:grid-cols-4 w-full not-lg:h-max h-min space-x-5 gap-2`}>
-					<TabsTrigger className="data-[state=active]:text-white w-full" value="carousel">Carrousel</TabsTrigger>
-					<TabsTrigger className="data-[state=active]:text-white w-full" value="especificacoes">Especificações</TabsTrigger>
-					<TabsTrigger className="data-[state=active]:text-white w-full" value="observacoes">Observações</TabsTrigger>
-					<TabsTrigger className={`data-[state=active]:text-white w-full`} value="opcionais">Opcionais</TabsTrigger>
 
-				</TabsList>
-				<TabsContent value="carousel">
-					<Card className="shadow-md border mt-5 bg-[#f8f8f8] p-5 ">
-						<div className="p-5">
-							<h2 className="text-xl font-medium mb-2">Imagens do Carrosel</h2>
-							<div className="flex flex-col md:flex-row gap-4 items-start md:items-end">
-								<Input
-									type="file"
-									multiple className="w-full md:w-auto"
-									onChange={handleFileChange}
-									onPointerDown={(e) => e.stopPropagation()}
-								/>
-							</div>
-							{images.length > 0 && <SortableContext items={images.map((file) => file.id)} strategy={horizontalListSortingStrategy}>
-								<DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-									<ul className="mt-4 space-y-2">
-										{images.map((file, index) =>
-											<SortableImage
-												key={file.id}
-												file={file}
-												index={index}
-												onRemove={handleRemove}
-												onRename={handleRename}
-												isExisting={file.isExisting}
-											/>
-										)}
-									</ul>
-								</DndContext>
-							</SortableContext>}
+				<Card className="shadow-md border mt-5 bg-[#f8f8f8] p-5 ">
+					<div className="p-5">
+						<h2 className="text-xl font-medium mb-2">Imagens do Carrosel</h2>
+						<div className="flex flex-col md:flex-row gap-4 items-start md:items-end">
+							<Input
+								type="file"
+								multiple className="w-full md:w-auto"
+								onChange={handleFileChange}
+								onPointerDown={(e) => e.stopPropagation()}
+							/>
 						</div>
-					</Card>
-				</TabsContent>
+						{images.length > 0 && <SortableContext items={images.map((file) => file.id)} strategy={horizontalListSortingStrategy}>
+							<DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+								<ul className="mt-4 space-y-2">
+									{images.map((file, index) =>
+										<SortableImage
+											key={file.id}
+											file={file}
+											index={index}
+											onRemove={handleRemove}
+											onRename={handleRename}
+											isExisting={file.isExisting}
+										/>
+									)}
+								</ul>
+							</DndContext>
+						</SortableContext>}
+					</div>
+				</Card>
 			</Tabs>
 			<Button type="submit" className="border text-lg text-white bg-background hover:bg-white hover:text-background transition-colors duration-300" onClick={handleSubmit}>
 				Salvar Imagens
