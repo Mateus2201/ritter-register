@@ -3,7 +3,13 @@
 import React, { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { useVehicleImage } from "@/hooks/use-vehicle-images";
+import { Toaster } from "@/components/ui/sonner";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import SortableImage from "@/components/sortable-images";
+import publicApi from "@/lib/api";
+import { v4 as uuidv4 } from 'uuid';
 
 import {
 	DndContext,
@@ -16,14 +22,10 @@ import {
 import {
 	arrayMove,
 	SortableContext,
-	verticalListSortingStrategy,
 	horizontalListSortingStrategy
 } from "@dnd-kit/sortable";
-import { Toaster } from "@/components/ui/sonner";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import SortableImage from "@/components/sortable-images";
+
+
 
 export default function FormConfig() {
 	const [selectedTab, setSelectedTab] = useState<string>("carousel");
@@ -39,32 +41,29 @@ export default function FormConfig() {
 		isRenamed: boolean,
 		previewUrl: string,
 		order?: number;
+		publicId: string;
 	}[]>([]);
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files) {
-			const maxId = images.reduce((max, img) => {
-				const idNumber = Number(img.id);
-				return isNaN(idNumber) ? max : Math.max(max, idNumber);
-			}, 0);
-
-			const newFiles = Array.from(e.target.files).map((file, index) => ({
-				id: (maxId + index + 1).toString(),
+			const newFiles = Array.from(e.target.files).map((file) => ({
+				id: uuidv4(),
 				file,
 				name: file.name,
 				isActive: true,
 				isExisting: false,
 				isRenamed: false,
 				previewUrl: URL.createObjectURL(file),
-				order: images.length + index + 1,
+				order: images.length + 1,
+				publicId: file.name
 			}));
 
 			setImages((prev) => [...prev, ...newFiles]);
 		}
 	};
 
-	const handleRemove = async (imageId: number) => {
-		const imageToDelete = images.find((m) => m.id === imageId.toString());
+	const handleRemove = async (index: number) => {
+		const imageToDelete = images[index];
 
 		if (!imageToDelete) {
 			toast.error("Imagem não encontrada.");
@@ -72,14 +71,20 @@ export default function FormConfig() {
 		}
 
 		if (!imageToDelete.isExisting) {
-			setImages((prev) => prev.filter((img) => img.id !== imageId.toString()));
+			setImages(prev => prev.filter((_, i) => i !== index));
 			toast.success("Imagem removida com sucesso!");
 			return;
 		}
 
 		try {
-			// await deleteVehicleImage(Number(imageToDelete.id));
-			setImages((prev) => prev.filter((img) => img.id !== imageId.toString()));
+			await publicApi.delete("/site-image", {
+				data: {
+					publicId: imageToDelete.publicId,
+					folder: "registro-site",
+				},
+			});
+
+			setImages(prev => prev.filter((_, i) => i !== index));
 			toast.success("Imagem removida com sucesso!");
 		} catch (error) {
 			console.error("Erro ao remover imagem:", error);
@@ -88,13 +93,11 @@ export default function FormConfig() {
 	};
 
 	const handleRename = (index: number, newName: string) => {
-		setImages(images.map(m => {
-			if (index == Number(m.id)) {
-				m.name = newName
-				m.isRenamed = true
-			}
-			return m;
-		}));
+		setImages(prev =>
+			prev.map((img, i) =>
+				i === index ? { ...img, name: newName, isRenamed: true } : img
+			)
+		);
 	};
 
 	const handleDragEnd = (event: any) => {
@@ -111,43 +114,54 @@ export default function FormConfig() {
 	};
 
 	const handleSubmit = async () => {
-		if (images.length === 0) return;
-
-		const renamedExisting = images
-			.filter(
-				img => img.isExisting && img.isRenamed && img.file instanceof File
-			);
-
-		await Promise
-			.all(renamedExisting
-				// .map(img => deleteVehicleImage(Number(img.id)))
-			);
-
-		const imagesToUpload = images
-			.filter((img) =>
-				(!img.isExisting && img.file instanceof File) ||
-				(img.isRenamed && img.file instanceof File)
-			)
-			.map(({ id, file, name }, index) => ({
-				id, file, name, order: index + 1,
-			}));
-
-
-		if (imagesToUpload.length === 0) {
-			toast("Nenhuma nova imagem para enviar.");
+		if (images.length === 0) {
+			toast("Nenhuma imagem selecionada.");
 			return;
 		}
 
-		// createVehicleImage(imagesToUpload, idVehicleState)
-		// 	.then(() => {
-		// 		toast.success("Imagens enviadas com sucesso!");
-		// 		setReloadImages(true);
-		// 	})
-		// 	.catch((err) => {
-		// 		console.error("Erro ao criar imagens:", err);
-		// 		toast.error("Erro ao salvar imagens.");
-		// 	});
+		const formData = new FormData();
+
+		images.forEach((img, index) => {
+			if (img.file instanceof File && !img.isExisting) {
+				formData.append("images", img.file, img.name);
+			}
+		});
+
+		formData.append("folder", "registro-site");
+		publicApi.post("/upload-site", formData)
+			.then((response) => {
+				console.log(response);
+
+				toast.success("Imagens enviadas com sucesso!");
+				setImages([]);
+			}).catch((error) => {
+				console.error("Erro ao enviar imagens:", error);
+				toast.error("Erro ao enviar imagens.");
+			});
+
 	};
+
+	useEffect(() => {
+		publicApi.get("/site-images")
+			.then(({ data }) => {
+				console.log(data);
+				setImages(data.map((img: any) => ({
+					id: img.publicId,
+					file: new File([], img.name),
+					name: img.name,
+					isActive: true,
+					isExisting: true,
+					isRenamed: false,
+					previewUrl: img.url,
+					order: img.order,
+					publicId: img.publicId
+				})));
+
+			}).catch((error) => {
+				console.error("Erro ao enviar imagens:", error);
+				toast.error("Erro ao enviar imagens.");
+			});
+	}, [])
 
 	return <div className="w-full max-w-4xl mx-auto px-4 py-8 space-y-6">
 		<Toaster />

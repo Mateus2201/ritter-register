@@ -35,12 +35,7 @@ export default function SortableImage({
         transition,
     };
 
-    const getImageSrc = () => {
-        if (file.file instanceof File) {
-            return URL.createObjectURL(file.file);
-        }
-        return file.previewUrl;
-    };
+    const getImageSrc = () => file.previewUrl || "";
 
     return (
         <li
