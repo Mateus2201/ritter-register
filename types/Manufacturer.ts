@@ -1,5 +1,5 @@
 type Manufacturer = {
-  idManufacturer?: number;
+  idManufacturer: number;
   name: string;
   logoFile?: string;
   createdAt?: Date;

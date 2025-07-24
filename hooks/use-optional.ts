@@ -15,7 +15,7 @@ export const useOptional = () => {
       console.error("Error creating Optional:", error);
       throw error;
     }
-  };  
+  };
 
   const getAllOptional = async (data?: any) => {
     try {
@@ -30,5 +30,19 @@ export const useOptional = () => {
     }
   };
 
-  return { createOptional, getAllOptional };
+  const deleteOptional = async (idOptional: number) => {
+    try {
+      const response = await publicApi.delete(`/optional/${idOptional}`);
+
+      return (response.data as Optional[]) || [];
+
+    } catch (error) {
+      if (error && typeof error === "object" && "response" in error) {
+        throw (error as any).response?.data || error;
+      }
+      throw error;
+    }
+  };
+
+  return { createOptional, getAllOptional, deleteOptional };
 };

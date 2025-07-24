@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useForm } from "react-hook-form"
 import { zodResolver } from '@hookform/resolvers/zod'
 import DialogType from '@/types/dialogs'
-import AlertComponent from '../alert'
+import AlertDialogComponent from '../alert'
 import { FormDataLogin } from '@/schema-forms/form-login'
 import { useAuth } from '@/hooks/use-auth'
 import Image from 'next/image'
@@ -60,7 +60,7 @@ export default function LoginComponent({ children }: LoginComponentProps) {
     }
 
     return <Form {...useSetFormLogin} >
-        <AlertComponent {...propsRegister} />
+        <AlertDialogComponent {...propsRegister} />
         <form onSubmit={useSetFormLogin.handleSubmit(onSubmit)} className="flex flex-col gap-4 p-3 h-full max-w-md mx-auto justify-between ">
             <Image src={logo} alt="w" className='w-full' />
 

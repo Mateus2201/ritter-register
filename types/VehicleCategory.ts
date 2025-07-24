@@ -1,5 +1,5 @@
 type VehicleCategory = {
-  idVehicleCategory?: number;
+  idVehicleCategory: number;
   description?: string;
   createdAt?: Date;
   createdBy?: string;

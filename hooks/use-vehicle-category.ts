@@ -18,7 +18,7 @@ export function useVehicleCategory() {
   const getAllVehicleCategory = async (data?: any) => {
     try {
       const response = await publicApi.get("/vehicle-category", { params: data });
-      
+
       return (response.data as VehicleCategory[]) || [];
     } catch (error) {
       console.error("Error fetching Vehicle Category:", error);
@@ -26,5 +26,19 @@ export function useVehicleCategory() {
     }
   };
 
-  return { createVehicleCategory, getAllVehicleCategory };
+  const deleteVehicleCategory = async (idVehicleCategory: number) => {
+    try {
+      const response = await publicApi.delete(`/vehicle-category/${idVehicleCategory}`);
+
+      return (response.data as VehicleCategory[]) || [];
+
+    } catch (error) {
+      if (error && typeof error === "object" && "response" in error) {
+        throw (error as any).response?.data || error;
+      }
+      throw error;
+    }
+  };
+
+  return { createVehicleCategory, getAllVehicleCategory, deleteVehicleCategory };
 }

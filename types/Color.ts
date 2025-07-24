@@ -1,5 +1,5 @@
 type Color = {
-  idColor?: number;
+  idColor: number;
   description: string;
   createdAt?: Date;
   createdBy?: string;

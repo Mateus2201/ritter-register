@@ -33,18 +33,20 @@ import React, { useEffect, useState } from "react";
 import Manufacturer from "@/types/Manufacturer";
 import { useManufacturer } from "@/hooks/use-manufacturer";
 import { FormDataManufacturer } from "@/schema-forms/form-manufacturer";
+import { error } from "console";
 
 export default function FormManufacturer() {
 	const [useManufacturerData, setManufacturerData] = useState<Manufacturer[]>([]);
+	const [reload, serReload] = useState<boolean>(false);
 
-	const { createManufacturer, getAllManufacturer } = useManufacturer();
+	const { createManufacturer, getAllManufacturer, deleteManufacturer } = useManufacturer();
 
 	const { useSetFormManufacturer } = FormDataManufacturer();
 
 	function onSubmit(data: { name: string }) {
 		const { name } = data;
 
-		const newManufacturer: Manufacturer = { name };
+		const newManufacturer: Manufacturer = { name, idManufacturer: 0 };
 
 		createManufacturer(newManufacturer)
 			.then((response) => {
@@ -91,7 +93,31 @@ export default function FormManufacturer() {
 
 	useEffect(() => {
 		SetUpdateListAllManufacturer();
-	}, []);
+	}, [reload]);
+
+	const handleDelete = (Manufacturer: Manufacturer) => {
+		if (!Manufacturer) return;
+
+		deleteManufacturer(Manufacturer.idManufacturer)
+			.then(() => {
+				serReload(!reload);
+				toast("Fabricante deletado com sucesso!", {
+						description: new Date().toLocaleDateString("pt-BR"),
+						action: {
+							label: "Fechar",
+							onClick: () => console.log("Undo"),
+						},
+					})
+			}).catch((error) => {
+				toast.error("Erro ao deletar fabricante:", {
+					description: error,
+					action: {
+						label: "Fechar",
+						onClick: () => console.log("Undo"),
+					},
+				});
+			});
+	}
 
 	const MakeTableRow = () => {
 		return useManufacturerData.map(
@@ -119,7 +145,7 @@ export default function FormManufacturer() {
 							variant="ghost"
 							size="icon"
 							className="text-destructive hover:bg-destructive/10"
-						// onClick={() => handleDelete(idManufacturer)}
+							onClick={() => handleDelete({ idManufacturer, name })}
 						>
 							<Trash2 className="w-4 h-4" />
 						</Button>

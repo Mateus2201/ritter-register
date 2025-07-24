@@ -34,11 +34,13 @@ import Manufacturer from "@/types/Manufacturer";
 import VehicleCategory from "@/types/VehicleCategory";
 import { FormDataVehicleCategory } from "@/schema-forms/form-vehicle-category";
 import { useVehicleCategory } from "@/hooks/use-vehicle-category";
+import AlertDialogComponent from "@/components/alert";
 
 export default function FormVehicleCategory() {
 	const [useVehicleCategoryData, setVehicleCategoryData] = useState<VehicleCategory[]>([]);
+	const [reload, serReload] = useState<boolean>(false);
 
-	const { createVehicleCategory, getAllVehicleCategory } = useVehicleCategory();
+	const { createVehicleCategory, getAllVehicleCategory, deleteVehicleCategory } = useVehicleCategory();
 
 	const { useSetFormVehicleCategory } = FormDataVehicleCategory();
 
@@ -46,7 +48,7 @@ export default function FormVehicleCategory() {
 		const { description } = data;
 
 		const newVehicleCategory: VehicleCategory = {
-			description
+			description, idVehicleCategory: 0
 		};
 
 		createVehicleCategory(newVehicleCategory)
@@ -94,7 +96,31 @@ export default function FormVehicleCategory() {
 
 	useEffect(() => {
 		SetUpdateListAllManufacturer();
-	}, []);
+	}, [reload]);
+
+	const handleDelete = (VehicleCategory: VehicleCategory) => {
+		if (!VehicleCategory) return;
+
+		deleteVehicleCategory(VehicleCategory.idVehicleCategory)
+			.then(() => {
+				serReload(!reload);
+				toast("Categoria de veículo deletada com sucesso!", {
+					description: new Date().toLocaleDateString("pt-BR"),
+					action: {
+						label: "Fechar",
+						onClick: () => console.log("Undo"),
+					},
+				})
+			}).catch((error) => {
+				toast.error("Erro ao deletar categoria de veículo:", {
+					description: error,
+					action: {
+						label: "Fechar",
+						onClick: () => console.log("Undo"),
+					},
+				});
+			});
+	}
 
 	const MakeTableRow = () => {
 		return useVehicleCategoryData.map(
@@ -122,7 +148,7 @@ export default function FormVehicleCategory() {
 							variant="ghost"
 							size="icon"
 							className="text-destructive hover:bg-destructive/10"
-							// onClick={() => handleDelete(idVehicleCategory)}
+							onClick={() => handleDelete({ idVehicleCategory })}
 						>
 							<Trash2 className="w-4 h-4" />
 						</Button>
@@ -135,7 +161,6 @@ export default function FormVehicleCategory() {
 
 	return <Form {...useSetFormVehicleCategory}>
 		<Toaster />
-
 		<div className="w-full max-w-4xl mx-auto px-4 py-8 space-y-6">
 			<div className="text-center">
 				<h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">

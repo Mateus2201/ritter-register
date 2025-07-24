@@ -37,13 +37,14 @@ import {
 export default function FormOptionalCategory() {
 	const [useLoading, setLoading] = useState(false);
 	const [useOptionalCategorys, setOptionalCategory] = useState<OptionalCategory[]>([]);
+	const [reload, serReload] = useState<boolean>(false);
 
-	const { createOptionalCategory, getAllOptionalCategory } = useOptionalCategory();
+	const { createOptionalCategory, getAllOptionalCategory, deleteOptionalCategory } = useOptionalCategory();
 	const { useSetFormOptionalCategory } = FormDataOptionalCategory();
 
 	function onSubmit(data: { description: string }) {
 		const { description } = data;
-		const newOptionalCategory: OptionalCategory = { description, optional: [] };
+		const newOptionalCategory: OptionalCategory = { description, optional: [], idOptionalCategory: 0 };
 
 		createOptionalCategory(newOptionalCategory)
 			.then((response) => {
@@ -88,8 +89,31 @@ export default function FormOptionalCategory() {
 					},
 				});
 			});
-	}, [useLoading]);
+	}, [useLoading, reload]);
 
+	const handleDelete = (OptionalCategory: OptionalCategory) => {
+		if (!OptionalCategory) return;
+
+		deleteOptionalCategory(OptionalCategory.idOptionalCategory)
+			.then(() => {
+				serReload(!reload);
+				toast("Categoria de opcional deletada com sucesso!", {
+					description: new Date().toLocaleDateString("pt-BR"),
+					action: {
+						label: "Fechar",
+						onClick: () => console.log("Undo"),
+					},
+				})
+			}).catch((error) => {
+				toast.error("Erro ao deletar categoria opcional:", {
+					description: error,
+					action: {
+						label: "Fechar",
+						onClick: () => console.log("Undo"),
+					},
+				});
+			});
+	}
 
 	const MakeTableRow = () => {
 		return useOptionalCategorys.map(
@@ -118,6 +142,9 @@ export default function FormOptionalCategory() {
 							variant="ghost"
 							size="icon"
 							className="text-destructive hover:bg-destructive/10"
+							onClick={() => handleDelete({ idOptionalCategory, description, optional: [] })}
+
+
 						>
 							<Trash2 className="w-4 h-4" />
 						</Button>
@@ -129,7 +156,7 @@ export default function FormOptionalCategory() {
 
 	return <Form {...useSetFormOptionalCategory}>
 		<Toaster />
-		<div className="w-full max-w-5xl mx-auto px-4 py-8 space-y-6">
+		<div className="w-7xl mx-auto px-4 py-8 space-y-6">
 			<div className="text-center">
 				<h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
 					Cadastro de Categoria de Opcionais

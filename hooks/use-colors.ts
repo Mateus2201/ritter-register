@@ -17,7 +17,7 @@ export function useColors() {
       }
       throw error;
     }
-  };  
+  };
 
   const getAllColors = async (data?: any) => {
     try {
@@ -25,7 +25,7 @@ export function useColors() {
 
       return (response.data as Color[]) || [];
 
-     } catch (error) {
+    } catch (error) {
       if (error && typeof error === "object" && "response" in error) {
         throw (error as any).response?.data || error;
       }
@@ -33,5 +33,19 @@ export function useColors() {
     }
   };
 
-  return { createColor, getAllColors };
+  const deleteColor = async (idColor: number) => {
+    try {
+      const response = await publicApi.delete(`/colors/${idColor}`);
+
+      return (response.data as Color[]) || [];
+
+    } catch (error) {
+      if (error && typeof error === "object" && "response" in error) {
+        throw (error as any).response?.data || error;
+      }
+      throw error;
+    }
+  };
+
+  return { createColor, getAllColors, deleteColor };
 }

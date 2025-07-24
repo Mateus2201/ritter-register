@@ -4,7 +4,7 @@ import { useState } from 'react'
 import publicApi from '@/lib/api'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import AlertComponent from '@/components/alert'
+import AlertDialogComponent from '@/components/alert'
 
 import { z } from "zod"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
@@ -50,7 +50,7 @@ export default function RegisterComponent({ children }: RegisterComponentProps) 
     }
 
     return <Form {...useSetFormRegister} >
-        <AlertComponent {...propsRegister} />
+        <AlertDialogComponent {...propsRegister} />
         <form onSubmit={useSetFormRegister.handleSubmit(onSubmit)} className="flex flex-col gap-4 p-3 h-full max-w-md mx-auto justify-between " >
             <Image src={logo} alt="w" className="w-full" />
 

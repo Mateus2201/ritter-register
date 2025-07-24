@@ -18,7 +18,7 @@ export function useManufacturer() {
   const getAllManufacturer = async (data?: any) => {
     try {
       const response = await publicApi.get("/manufacturer", { params: data });
-      
+
       return (response.data as Manufacturer[]) || [];
     } catch (error) {
       console.error("Error fetching Manufacturer:", error);
@@ -26,5 +26,19 @@ export function useManufacturer() {
     }
   };
 
-  return { createManufacturer, getAllManufacturer };
+  const deleteManufacturer = async (idManufacturer: number) => {
+    try {
+      const response = await publicApi.delete(`/manufacturer/${idManufacturer}`);
+
+      return (response.data as Manufacturer[]) || [];
+
+    } catch (error) {
+      if (error && typeof error === "object" && "response" in error) {
+        throw (error as any).response?.data || error;
+      }
+      throw error;
+    }
+  };
+
+  return { createManufacturer, getAllManufacturer, deleteManufacturer };
 }

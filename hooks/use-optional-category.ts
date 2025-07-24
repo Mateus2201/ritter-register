@@ -28,17 +28,17 @@ export function useOptionalCategory() {
       throw error;
     }
   };
-  
-  const updateOptionalCategory = async (data: any) => {
-    try {
-      const response = await publicApi.put(
-        `/optional-category/${data.id}`,
-        data
-      );
 
-      return response.data;
+  const deleteOptionalCategory = async (idOptionalCategory: number) => {
+    try {
+      const response = await publicApi.delete(`/optional-category/${idOptionalCategory}`);
+
+      return (response.data as OptionalCategory[]) || [];
+
     } catch (error) {
-      console.error("Error updating Optional Category:", error);
+      if (error && typeof error === "object" && "response" in error) {
+        throw (error as any).response?.data || error;
+      }
       throw error;
     }
   };
@@ -46,6 +46,6 @@ export function useOptionalCategory() {
   return {
     getAllOptionalCategory,
     createOptionalCategory,
-    updateOptionalCategory,
+    deleteOptionalCategory,
   };
 }

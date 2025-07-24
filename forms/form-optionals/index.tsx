@@ -34,6 +34,8 @@ import {
 
 export default function FormOptional() {
 	const [useOptionalData, setOptionalData] = useState<Optional[]>([]);
+	const [reload, serReload] = useState<boolean>(false);
+
 	const [useOptionalCategoryData, setOptionalCategoryData] = useState<OptionalCategory[]>([{
 		description: "Categoria Opcional",
 		idOptionalCategory: 0,
@@ -41,7 +43,7 @@ export default function FormOptional() {
 	}]);
 
 	const { getAllOptionalCategory } = useOptionalCategory();
-	const { getAllOptional, createOptional } = useOptional();
+	const { getAllOptional, createOptional, deleteOptional } = useOptional();
 
 	const { useSetFormOptional } = FormDataOptional();
 
@@ -101,7 +103,7 @@ export default function FormOptional() {
 
 	useEffect(() => {
 		SetUpdateListAllOptional();
-	}, []);
+	}, [reload]);
 
 	useEffect(() => {
 		getAllOptionalCategory()
@@ -118,7 +120,31 @@ export default function FormOptional() {
 					},
 				});
 			})
-	}, []);
+	}, [reload]);
+
+	const handleDelete = (Optional: Optional) => {
+		if (!Optional) return;
+
+		deleteOptional(Optional.idOptional)
+			.then(() => {
+				serReload(!reload);
+				toast("Opcional deletado com sucesso!", {
+					description: new Date().toLocaleDateString("pt-BR"),
+					action: {
+						label: "Fechar",
+						onClick: () => console.log("Undo"),
+					},
+				})
+			}).catch((error) => {
+				toast.error("Erro ao deletar opcional:", {
+					description: error,
+					action: {
+						label: "Fechar",
+						onClick: () => console.log("Undo"),
+					},
+				});
+			});
+	}
 
 	const MakeTableRow = () => {
 		return useOptionalData.map(
@@ -156,6 +182,8 @@ export default function FormOptional() {
 							variant="ghost"
 							size="icon"
 							className="text-destructive hover:bg-destructive/10"
+							onClick={() => handleDelete({ idOptional, description })}
+
 						>
 							<Trash2 className="w-4 h-4" />
 						</Button>
@@ -167,7 +195,7 @@ export default function FormOptional() {
 
 	return <Form {...useSetFormOptional}>
 		<Toaster />
-		<div className="w-full max-w-7xl mx-auto px-4 py-8 space-y-6">
+		<div className="w-7xl mx-auto px-4 py-8 space-y-6">
 			<div className="text-center">
 				<h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
 					Cadastro de Opcionais
@@ -231,6 +259,7 @@ export default function FormOptional() {
 						<TableRow>
 							<TableHead className="hidden md:table-cell text-center">ID</TableHead>
 							<TableHead className="text-center">Descrição</TableHead>
+							<TableHead className="text-center">Categoria</TableHead>
 							<TableHead className="hidden lg:table-cell text-center">Criado por</TableHead>
 							<TableHead className="hidden lg:table-cell text-center">Criado em</TableHead>
 							<TableHead className="hidden xl:table-cell text-center">Alterado por</TableHead>

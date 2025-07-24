@@ -15,21 +15,22 @@ export default function PageOptionals() {
 			<SidebarComponent />
 			<Tabs value={tab} onValueChange={setTab} className="w-full flex justify-center items-center p-10 bg-white">
 				<h1 className="text-5xl font-bold text-gray-800">Gerenciar Opcionais</h1>
-				<TabsList className="flex justify-center gap-4 h-min w-full max-w-4xl bg-gray-100 p-2 rounded-lg mb-6">
-					<TabsTrigger value="categoria" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white px-4 py-2 rounded-md">
-						Categorias
-					</TabsTrigger>
-					<TabsTrigger value="opcional" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white px-4 py-2 rounded-md">
+				<TabsList className="grid lg:grid-cols-2 grid-cols-2 w-7xl mx-auto not-lg:h-max h-min space-x-5 gap-2">
+
+					<TabsTrigger value="opcional" className="data-[state=active]:text-white w-full">
 						Opcionais
 					</TabsTrigger>
+					<TabsTrigger value="categoria" className="data-[state=active]:text-white w-full">
+						Categorias
+					</TabsTrigger>
+
 				</TabsList>
-				<TabsContent value="categoria">
-					<FormOptionalCategory />
-				</TabsContent>
 				<TabsContent value="opcional">
 					<FormOptional />
 				</TabsContent>
-
+				<TabsContent value="categoria">
+					<FormOptionalCategory />
+				</TabsContent>
 			</Tabs>
 		</div>
 	</PrivateRoute>

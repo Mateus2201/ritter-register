@@ -15,7 +15,7 @@ import React from 'react'
 
 
 
-export default function AlertComponent({ title, description, cancel, cancelButton, cancelText, confirm, confirmButton, confirmText, defaultOpen, open }: DialogType) {
+export default function AlertDialogComponent({ title, description, cancel, cancelButton, cancelText, confirm, confirmButton, confirmText, defaultOpen, open }: DialogType) {
     return <AlertDialog defaultOpen={defaultOpen} open={open} >
         <AlertDialogContent className="bg-gray-200">
             <AlertDialogHeader>

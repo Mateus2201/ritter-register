@@ -37,15 +37,16 @@ import { z } from "zod";
 
 export default function FormColor() {
 	const [useColorData, setColorData] = useState<Color[]>([]);
+	const [reload, serReload] = useState<boolean>(false);
 
-	const { getAllColors, createColor } = useColors();
+	const { getAllColors, createColor, deleteColor } = useColors();
 
 	const { useSetFormColor, schemaColor } = FormDataColor();
 
 	function onSubmit(data: z.infer<typeof schemaColor>) {
 		const { description } = data;
 
-		const newColor: Color = { description };
+		const newColor: Color = { description, idColor: 0 };
 
 		createColor(newColor)
 			.then((response) => {
@@ -82,7 +83,6 @@ export default function FormColor() {
 		getAllColors()
 			.then((response) => {
 				setColorData(response);
-
 			}).catch((error) => {
 				toast.error("Erro ao buscar dados da API:", {
 					description: error,
@@ -94,9 +94,33 @@ export default function FormColor() {
 			})
 	}
 
+	const handleDelete = (Color: Color) => {
+		if (!Color) return;
+
+		deleteColor(Color.idColor)
+			.then(() => {
+				serReload(!reload);
+				toast("Cor deletada com sucesso!", {
+					description: new Date().toLocaleDateString("pt-BR"),
+					action: {
+						label: "Fechar",
+						onClick: () => console.log("Undo"),
+					},
+				})
+			}).catch((error) => {
+				toast.error("Erro ao deletar cor:", {
+					description: error,
+					action: {
+						label: "Fechar",
+						onClick: () => console.log("Undo"),
+					},
+				});
+			});
+	}
+
 	useEffect(() => {
 		SetUpdateListAllColors();
-	}, []);
+	}, [reload]);
 
 	const MakeTableRow = () => {
 		return useColorData.map(({ idColor, description, createdAt, createdBy, updatedAt, updatedBy }: Color) => (
@@ -116,12 +140,12 @@ export default function FormColor() {
 						variant="ghost"
 						size="icon"
 						className="hover:bg-destructive/10 text-destructive"
-						// onClick={() => handleDelete(idColor)}
+						onClick={() => handleDelete({ idColor, description, createdAt, createdBy, updatedAt, updatedBy })}
 					>
 						<Trash2 className="w-4 h-4" />
 					</Button>
 				</TableCell>
-			</TableRow>
+			</TableRow >
 		));
 	}
 
