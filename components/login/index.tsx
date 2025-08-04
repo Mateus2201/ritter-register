@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useForm } from "react-hook-form"
 import { zodResolver } from '@hookform/resolvers/zod'
 import DialogType from '@/types/dialogs'
-import AlertDialogComponent from '../alert'
+import { AlertDialogComponent } from '../alert'
 import { FormDataLogin } from '@/schema-forms/form-login'
 import { useAuth } from '@/hooks/use-auth'
 import Image from 'next/image'

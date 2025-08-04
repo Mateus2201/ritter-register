@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import LoginComponent from "@/components/login";
 import RegisterComponent from "@/components/register";
 import backgroundImg from "@/src/img/background.jpg";
-import Image from "next/image";
 
 export default function EntryPage() {
     const [showLogin, setShowLogin] = useState(true);

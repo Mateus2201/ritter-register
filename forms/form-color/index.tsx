@@ -34,10 +34,13 @@ import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
 import { FormDataColor } from "@/schema-forms/form-colors";
 import { z } from "zod";
+import DialogType from "@/types/dialogs";
+import { AlertDialogComponent } from "@/components/alert";
 
 export default function FormColor() {
 	const [useColorData, setColorData] = useState<Color[]>([]);
 	const [reload, serReload] = useState<boolean>(false);
+	const [propsRegister, setPropsRegister] = useState<DialogType>()
 
 	const { getAllColors, createColor, deleteColor } = useColors();
 
@@ -61,8 +64,7 @@ export default function FormColor() {
 						},
 					})
 				}
-			})
-			.catch(({ error }) => {
+			}).catch(({ error }) => {
 				console.error("Erro ao criar Cor:", error);
 
 				toast("Erro ao criar Cor:", {
@@ -97,25 +99,58 @@ export default function FormColor() {
 	const handleDelete = (Color: Color) => {
 		if (!Color) return;
 
-		deleteColor(Color.idColor)
-			.then(() => {
-				serReload(!reload);
-				toast("Cor deletada com sucesso!", {
-					description: new Date().toLocaleDateString("pt-BR"),
-					action: {
-						label: "Fechar",
-						onClick: () => console.log("Undo"),
-					},
-				})
-			}).catch((error) => {
-				toast.error("Erro ao deletar cor:", {
-					description: error,
-					action: {
-						label: "Fechar",
-						onClick: () => console.log("Undo"),
-					},
-				});
-			});
+		setPropsRegister({
+			title: 'Deseja excluir?',
+			description: `A cor ${Color.description} pode estar sendo usada em outros veículos e gerar erros!`,
+			cancel: () => {
+				deleteColor(Color.idColor)
+					.then(() => {
+						serReload(!reload);
+						toast("Cor deletada com sucesso!", {
+							description: new Date().toLocaleDateString("pt-BR"),
+							action: {
+								label: "Fechar",
+								onClick: () => console.log("Undo"),
+							},
+						})
+					}).catch((error) => {
+						toast.error("Erro ao deletar cor:", {
+							description: error,
+							action: {
+								label: "Fechar",
+								onClick: () => console.log("Undo"),
+							},
+						});
+					})
+			},
+			confirm: () => setPropsRegister({ ...propsRegister, open: false }),
+			cancelText: 'cancelar',
+			confirmText: 'excluir',
+			cancelButton: true,
+			confirmButton: true,
+			open: true
+		})
+
+
+		// deleteColor(Color.idColor)
+		// 	.then(() => {
+		// 		serReload(!reload);
+		// 		toast("Cor deletada com sucesso!", {
+		// 			description: new Date().toLocaleDateString("pt-BR"),
+		// 			action: {
+		// 				label: "Fechar",
+		// 				onClick: () => console.log("Undo"),
+		// 			},
+		// 		})
+		// 	}).catch((error) => {
+		// 		toast.error("Erro ao deletar cor:", {
+		// 			description: error,
+		// 			action: {
+		// 				label: "Fechar",
+		// 				onClick: () => console.log("Undo"),
+		// 			},
+		// 		});
+		// 	});
 	}
 
 	useEffect(() => {
@@ -152,6 +187,7 @@ export default function FormColor() {
 
 	return <Form {...useSetFormColor}>
 		<Toaster />
+		<AlertDialogComponent {...propsRegister} />
 		<div className="w-full max-w-4xl mx-auto px-4 py-8 space-y-6">
 			<div className="text-center">
 				<h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">

@@ -14,16 +14,14 @@ export default function PageOptionals() {
 		<div className="flex w-full min-h-screen">
 			<SidebarComponent />
 			<Tabs value={tab} onValueChange={setTab} className="w-full flex justify-center items-center p-10 bg-white">
-				<h1 className="text-5xl font-bold text-gray-800">Gerenciar Opcionais</h1>
-				<TabsList className="grid lg:grid-cols-2 grid-cols-2 w-7xl mx-auto not-lg:h-max h-min space-x-5 gap-2">
-
+				<h1 className="text-5xl font-bold text-center text-gray-800 p-5">Gerenciar Opcionais</h1>
+				<TabsList className="grid lg:grid-cols-2 grid-cols-1 w-full max-w-7xl mx-auto not-lg:h-max h-min space-x-5 gap-2">
 					<TabsTrigger value="opcional" className="data-[state=active]:text-white w-full">
 						Opcionais
 					</TabsTrigger>
 					<TabsTrigger value="categoria" className="data-[state=active]:text-white w-full">
 						Categorias
 					</TabsTrigger>
-
 				</TabsList>
 				<TabsContent value="opcional">
 					<FormOptional />

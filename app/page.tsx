@@ -1,6 +1,10 @@
-import { redirect } from "next/navigation";
+import SidebarComponent from "@/components/sidebar";
+import Stock from "@/components/stock";
+import PrivateRoute from "@/components/use-routes";
 
 export default function Home() {
-  redirect('/entry')
-  return null;
+  return <PrivateRoute>
+    <SidebarComponent />
+    <Stock />
+  </PrivateRoute>
 }

@@ -118,33 +118,51 @@ export default function FormOptionalCategory() {
 	const MakeTableRow = () => {
 		return useOptionalCategorys.map(
 			({
-				idOptionalCategory, description, createdAt, createdBy, updatedAt, updatedBy
+				idOptionalCategory,
+				description,
+				createdAt,
+				createdBy,
+				updatedAt,
+				updatedBy,
 			}: OptionalCategory) => (
 				<TableRow key={idOptionalCategory}>
-					<TableCell className="hidden md:table-cell text-center">
+					<TableCell className="hidden md:table-cell text-center min-w-[80px]">
 						{idOptionalCategory}
 					</TableCell>
-					<TableCell className="text-center">{description}</TableCell>
-					<TableCell className="hidden lg:table-cell text-center">
+					<TableCell
+						className="text-center truncate max-w-[220px]"
+						title={description}
+					>
+						{description}
+					</TableCell>
+					<TableCell className="hidden lg:table-cell text-center min-w-[120px]">
 						{createdBy}
 					</TableCell>
-					<TableCell className="hidden lg:table-cell text-center">
-						{createdAt ? new Date(createdAt).toLocaleDateString("pt-BR") : ""}
+					<TableCell className="hidden lg:table-cell text-center min-w-[130px]">
+						{createdAt
+							? new Date(createdAt).toLocaleDateString("pt-BR")
+							: ""}
 					</TableCell>
-					<TableCell className="hidden xl:table-cell text-center">
+					<TableCell className="hidden xl:table-cell text-center min-w-[120px]">
 						{updatedBy}
 					</TableCell>
-					<TableCell className="hidden xl:table-cell text-center">
-						{updatedAt ? new Date(updatedAt).toLocaleDateString("pt-BR") : ""}
+					<TableCell className="hidden xl:table-cell text-center min-w-[130px]">
+						{updatedAt
+							? new Date(updatedAt).toLocaleDateString("pt-BR")
+							: ""}
 					</TableCell>
 					<TableCell className="text-center">
 						<Button
 							variant="ghost"
 							size="icon"
-							className="text-destructive hover:bg-destructive/10"
-							onClick={() => handleDelete({ idOptionalCategory, description, optional: [] })}
-
-
+							className="text-destructive hover:bg-destructive/10 flex-shrink-0"
+							onClick={() =>
+								handleDelete({
+									idOptionalCategory,
+									description,
+									optional: [],
+								})
+							}
 						>
 							<Trash2 className="w-4 h-4" />
 						</Button>
@@ -156,7 +174,7 @@ export default function FormOptionalCategory() {
 
 	return <Form {...useSetFormOptionalCategory}>
 		<Toaster />
-		<div className="w-7xl mx-auto px-4 py-8 space-y-6">
+		<div className="w-full max-w-7xl mx-auto px-4 py-8 space-y-6">
 			<div className="text-center">
 				<h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
 					Cadastro de Categoria de Opcionais
@@ -167,48 +185,71 @@ export default function FormOptionalCategory() {
 			</div>
 			<form onSubmit={useSetFormOptionalCategory.handleSubmit(onSubmit)}>
 				<Card className="rounded-xl border bg-card shadow-sm p-6 space-y-4">
-					<div className="grid lg:grid-cols-2 gap-4">
+					<div className="grid gap-4 sm:grid-cols-2">
 						<FormField
 							control={useSetFormOptionalCategory.control}
 							name="description"
 							render={({ field }) => (
 								<FormItem>
 									<FormControl>
-										<Input placeholder="Descrição da categoria" {...field} />
+										<Input
+											placeholder="Descrição da categoria"
+											{...field}
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
 							)}
 						/>
-						<Button type="submit" className="w-full sm:w-auto h-full">
-							<Plus className="w-4 h-4 mr-2" />
-							Adicionar
-						</Button>
+						<div className="flex items-stretch">
+							<Button
+								type="submit"
+								className="w-full sm:w-auto h-full flex items-center justify-center"
+							>
+								<Plus className="w-4 h-4 mr-2" />
+								Adicionar
+							</Button>
+						</div>
 					</div>
 				</Card>
 			</form>
 			<Card className="rounded-xl border bg-card shadow-sm p-4">
-				<Table>
-					<TableCaption className="text-muted-foreground text-sm">
-						Lista das categorias adicionadas
-					</TableCaption>
-					<TableHeader>
-						<TableRow>
-							<TableHead className="hidden md:table-cell text-center">ID</TableHead>
-							<TableHead className="text-center">Descrição</TableHead>
-							<TableHead className="hidden lg:table-cell text-center">Criado por</TableHead>
-							<TableHead className="hidden lg:table-cell text-center">Criado em</TableHead>
-							<TableHead className="hidden xl:table-cell text-center">Alterado por</TableHead>
-							<TableHead className="hidden xl:table-cell text-center">Alterado em</TableHead>
-							<TableHead className="text-center">Excluir</TableHead>
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						<MakeTableRow />
-					</TableBody>
-				</Table>
+				<div className="overflow-x-auto">
+					<Table className="table-fixed w-full">
+						<TableCaption className="text-muted-foreground text-sm">
+							Lista das categorias adicionadas
+						</TableCaption>
+						<TableHeader>
+							<TableRow>
+								<TableHead className="hidden md:table-cell text-center min-w-[80px]">
+									ID
+								</TableHead>
+								<TableHead className="text-center min-w-[150px]">
+									Descrição
+								</TableHead>
+								<TableHead className="hidden lg:table-cell text-center min-w-[120px]">
+									Criado por
+								</TableHead>
+								<TableHead className="hidden lg:table-cell text-center min-w-[130px]">
+									Criado em
+								</TableHead>
+								<TableHead className="hidden xl:table-cell text-center min-w-[120px]">
+									Alterado por
+								</TableHead>
+								<TableHead className="hidden xl:table-cell text-center min-w-[130px]">
+									Alterado em
+								</TableHead>
+								<TableHead className="text-center min-w-[80px]">
+									Excluir
+								</TableHead>
+							</TableRow>
+						</TableHeader>
+						<TableBody>
+							<MakeTableRow />
+						</TableBody>
+					</Table>
+				</div>
 			</Card>
 		</div>
-
 	</Form>
 }

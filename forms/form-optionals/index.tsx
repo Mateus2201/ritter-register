@@ -158,44 +158,57 @@ export default function FormOptional() {
 				updatedBy,
 			}: Optional) => (
 				<TableRow key={idOptional}>
-					<TableCell className="hidden md:table-cell text-center">
+					<TableCell className="hidden md:table-cell text-center min-w-[80px]">
 						{idOptional}
 					</TableCell>
-					<TableCell className="text-center truncate">{description}</TableCell>
-					<TableCell className="text-center ">
+					<TableCell
+						className="text-center truncate max-w-[200px]"
+						title={description}
+					>
+						{description}
+					</TableCell>
+					<TableCell
+						className="hidden lg:table-cell text-center min-w-[150px]"
+						title={OptionalCategory?.description}
+					>
 						{OptionalCategory?.description}
 					</TableCell>
-					<TableCell className="hidden lg:table-cell text-center">
+					<TableCell className="hidden lg:table-cell text-center min-w-[120px]">
 						{createdBy}
 					</TableCell>
-					<TableCell className="hidden lg:table-cell text-center">
-						{createdAt ? new Date(createdAt).toLocaleDateString("pt-BR") : ""}
+					<TableCell className="hidden lg:table-cell text-center min-w-[130px]">
+						{createdAt
+							? new Date(createdAt).toLocaleDateString("pt-BR")
+							: ""}
 					</TableCell>
-					<TableCell className="hidden xl:table-cell text-center">
+					<TableCell className="hidden xl:table-cell text-center min-w-[120px]">
 						{updatedBy}
 					</TableCell>
-					<TableCell className="hidden xl:table-cell text-center">
-						{updatedAt ? new Date(updatedAt).toLocaleDateString("pt-BR") : ""}
+					<TableCell className="hidden xl:table-cell text-center min-w-[130px]">
+						{updatedAt
+							? new Date(updatedAt).toLocaleDateString("pt-BR")
+							: ""}
 					</TableCell>
 					<TableCell className="text-center">
 						<Button
 							variant="ghost"
 							size="icon"
-							className="text-destructive hover:bg-destructive/10"
-							onClick={() => handleDelete({ idOptional, description })}
-
+							className="text-destructive hover:bg-destructive/10 flex-shrink-0"
+							onClick={() =>
+								handleDelete({ idOptional, description })
+							}
 						>
 							<Trash2 className="w-4 h-4" />
 						</Button>
 					</TableCell>
 				</TableRow>
 			)
-		);
+		)
 	};
 
 	return <Form {...useSetFormOptional}>
 		<Toaster />
-		<div className="w-7xl mx-auto px-4 py-8 space-y-6">
+		<div className="w-full max-w-7xl mx-auto px-4 py-8 space-y-6">
 			<div className="text-center">
 				<h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
 					Cadastro de Opcionais
@@ -204,9 +217,10 @@ export default function FormOptional() {
 					Adicione e gerencie Opcionais no sistema
 				</p>
 			</div>
+
 			<form onSubmit={useSetFormOptional.handleSubmit(onSubmit)}>
 				<Card className="rounded-xl border bg-card shadow-sm p-6 space-y-4">
-					<div className="grid lg:grid-cols-3 gap-4">
+					<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 						<FormField
 							control={useSetFormOptional.control}
 							name="idOptionalCategory"
@@ -216,13 +230,21 @@ export default function FormOptional() {
 										<SelectComponent
 											label="Categoria Opcional"
 											id="categoryOptional"
-											onChange={(value) => field.onChange(Number(value))}
+											onChange={(value) =>
+												field.onChange(Number(value))
+											}
 											value={field.value?.toString()}
 											dataValue={useOptionalCategoryData
-												.filter((m) => m.idOptionalCategory !== undefined)
+												.filter(
+													(m) =>
+														m.idOptionalCategory !==
+														undefined
+												)
 												.map((m) => ({
-													value: m.idOptionalCategory!,
-													description: m.description,
+													value:
+														m.idOptionalCategory!,
+													description:
+														m.description,
 												}))}
 										/>
 									</FormControl>
@@ -236,42 +258,69 @@ export default function FormOptional() {
 							render={({ field }) => (
 								<FormItem>
 									<FormControl>
-										<Input placeholder="Descrição" {...field} />
+										<Input
+											placeholder="Descrição"
+											{...field}
+										/>
 									</FormControl>
 									<FormMessage className="text-red-500" />
 								</FormItem>
 							)}
 						/>
-						<Button type="submit" className="w-full sm:w-auto h-full">
-							<Plus className="w-4 h-4 mr-2" />
-							Adicionar
-						</Button>
+						<div className="flex items-stretch">
+							<Button
+								type="submit"
+								className="w-full sm:w-auto h-full flex items-center justify-center"
+							>
+								<Plus className="w-4 h-4 mr-2" />
+								Adicionar
+							</Button>
+						</div>
 					</div>
 				</Card>
 			</form>
 
 			<Card className="rounded-xl border bg-card shadow-sm p-4">
-				<Table>
-					<TableCaption className="text-muted-foreground text-sm">
-						Lista dos opcionais cadastrados
-					</TableCaption>
-					<TableHeader>
-						<TableRow>
-							<TableHead className="hidden md:table-cell text-center">ID</TableHead>
-							<TableHead className="text-center">Descrição</TableHead>
-							<TableHead className="text-center">Categoria</TableHead>
-							<TableHead className="hidden lg:table-cell text-center">Criado por</TableHead>
-							<TableHead className="hidden lg:table-cell text-center">Criado em</TableHead>
-							<TableHead className="hidden xl:table-cell text-center">Alterado por</TableHead>
-							<TableHead className="hidden xl:table-cell text-center">Alterado em</TableHead>
-							<TableHead className="text-center">Excluir</TableHead>
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						<MakeTableRow />
-					</TableBody>
-				</Table>
+				<div className="overflow-x-auto">
+					<Table className="table-fixed w-full">
+						<TableCaption className="text-muted-foreground text-sm">
+							Lista dos opcionais cadastrados
+						</TableCaption>
+						<TableHeader>
+							<TableRow>
+								<TableHead className="hidden md:table-cell text-center min-w-[80px]">
+									ID
+								</TableHead>
+								<TableHead className="text-center min-w-[150px]">
+									Descrição
+								</TableHead>
+								<TableHead className="text-center hidden lg:table-cell min-w-[150px]">
+									Categoria
+								</TableHead>
+								<TableHead className="hidden lg:table-cell text-center min-w-[120px]">
+									Criado por
+								</TableHead>
+								<TableHead className="hidden lg:table-cell text-center min-w-[130px]">
+									Criado em
+								</TableHead>
+								<TableHead className="hidden xl:table-cell text-center min-w-[120px]">
+									Alterado por
+								</TableHead>
+								<TableHead className="hidden xl:table-cell text-center min-w-[130px]">
+									Alterado em
+								</TableHead>
+								<TableHead className="text-center min-w-[80px]">
+									Excluir
+								</TableHead>
+							</TableRow>
+						</TableHeader>
+						<TableBody>
+							<MakeTableRow />
+						</TableBody>
+					</Table>
+				</div>
 			</Card>
 		</div>
 	</Form>
+
 }

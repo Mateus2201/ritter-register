@@ -84,16 +84,12 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
 
     const { getAllColors } = useColors();
     const { getAllManufacturer } = useManufacturer();
-    const { getAllOptional } = useOptional();
-    const { getAllOptionalCategory } = useOptionalCategory();
     const { getAllVehicleCategory } = useVehicleCategory();
     const { getVehicleById, createVehicle, updateVehicle } = useVehicle();
 
     const [selectedTab, setSelectedTab] = useState<string>("dados");
     const [useColorData, setUseColorData] = useState<Color[]>([]);
     const [useManufacturerData, setManufacturerData] = useState<Manufacturer[]>([]);
-    const [useOptionalData, setOptionalData] = useState<Optional[]>([]);
-    const [useOptionalCategoryData, setOptionalCategoryData] = useState<OptionalCategory[]>([]);
     const [useVehicleCategoryData, setVehicleCategoryData] = useState<VehicleCategory[]>([]);
     const [formReady, setFormReady] = useState(false);
 
@@ -174,33 +170,6 @@ export default function FormVehicle({ idVehicle }: VehicleProps) {
             handleError("Erro ao carregar dados do veículo", err);
         });
     }, [idVehicleState, useSetForm]);
-
-    useEffect(() => {
-        const fetchInitialData = async () => {
-            try {
-                const [categories, optionalsList] = await Promise.all([
-                    getAllOptionalCategory({}),
-                    getAllOptional({}),
-                ]);
-
-                const enrichedCategories = categories.map((category) => ({
-                    ...category,
-                    optional: optionalsList.filter(
-                        (opt) => opt.idOptionalCategory === category.idOptionalCategory
-                    ),
-                }));
-
-                setOptionalCategoryData(enrichedCategories);
-                setOptionalData(optionalsList);
-            } catch (error) {
-                handleError("Erro ao carregar dados iniciais!", error);
-
-                console.error("Erro ao carregar dados iniciais:", error);
-            }
-        };
-
-        fetchInitialData();
-    }, []);
 
     useEffect(() => {
         getAllColors({})
