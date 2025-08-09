@@ -6,6 +6,8 @@ import { Card } from "../ui/card";
 import { Button } from "../ui/button";
 import { toast } from "sonner";
 import { useVehicleImage } from "@/hooks/use-vehicle-images";
+import { AlertDialogComponent } from "../alert";
+import DialogType from "@/types/dialogs";
 
 import {
     DndContext,
@@ -27,8 +29,9 @@ interface VehicleProps {
 }
 
 export default function UploadImages({ idVehicle }: VehicleProps) {
-    const [idVehicleState] = useState<number>(idVehicle ? Number(idVehicle) : 0)
+    const [idVehicleState] = useState<number>(idVehicle ? Number(idVehicle) : 0);
     const [reloadImages, setReloadImages] = useState<boolean>(true);
+    const [propsRegister, setPropsRegister] = useState<DialogType>();
     const sensors = useSensors(useSensor(PointerSensor));
     const [images, setImages] = useState<{
         id: string,
@@ -89,27 +92,45 @@ export default function UploadImages({ idVehicle }: VehicleProps) {
     };
 
     const handleRemove = async (imageId: number) => {
-        const imageToDelete = images.find((m) => m.id === imageId.toString());
 
-        if (!imageToDelete) {
-            toast.error("Imagem não encontrada.");
-            return;
-        }
+        setPropsRegister({
+            title: 'Deseja excluir a foto?',
+            description: 'Excluindo essa imagem, não poderá ser revertida posteriormente',
+            confirm: async () => {
+                const imageToDelete = images.find((m) => m.id === imageId.toString());
 
-        if (!imageToDelete.isExisting) {
-            setImages((prev) => prev.filter((img) => img.id !== imageId.toString()));
-            toast.success("Imagem removida com sucesso!");
-            return;
-        }
+                if (!imageToDelete) {
+                    toast.error("Imagem não encontrada.");
+                    setPropsRegister({ ...propsRegister, open: false })
+                    return;
+                }
 
-        try {
-            await deleteVehicleImage(Number(imageToDelete.id));
-            setImages((prev) => prev.filter((img) => img.id !== imageId.toString()));
-            toast.success("Imagem removida com sucesso!");
-        } catch (error) {
-            console.error("Erro ao remover imagem:", error);
-            toast.error("Erro ao remover imagem.");
-        }
+                if (!imageToDelete.isExisting) {
+                    setImages((prev) => prev.filter((img) => img.id !== imageId.toString()));
+                    toast.success("Imagem removida com sucesso!");
+                    setPropsRegister({ ...propsRegister, open: false })
+                    return;
+                }
+
+                try {
+                    await deleteVehicleImage(Number(imageToDelete.id));
+                    setImages((prev) => prev.filter((img) => img.id !== imageId.toString()));
+                    toast.success("Imagem removida com sucesso!");
+                    setPropsRegister({ ...propsRegister, open: false })
+                } catch (error) {
+                    setPropsRegister({ ...propsRegister, open: false })
+                    console.error("Erro ao remover imagem:", error);
+                    toast.error("Erro ao remover imagem.");
+                }
+
+            },
+            cancel: () => setPropsRegister({ ...propsRegister, open: false }),
+            cancelText: 'cancelar',
+            confirmText: 'excluir',
+            cancelButton: true,
+            confirmButton: true,
+            open: true
+        })
     };
 
     const handleRename = (index: number, newName: string) => {
@@ -172,6 +193,8 @@ export default function UploadImages({ idVehicle }: VehicleProps) {
     };
 
     return <div className="grid gap-5">
+        <AlertDialogComponent {...propsRegister} />
+
         <Card className="shadow-md border mt-5 bg-[#f8f8f8] p-5 ">
             <div className="p-5">
                 <h2 className="text-xl font-medium mb-2">Imagens do Veículo</h2>
@@ -192,9 +215,9 @@ export default function UploadImages({ idVehicle }: VehicleProps) {
                                     file={file}
                                     index={Number(file.id)}
                                     onRemove={handleRemove}
-                                    onRename={handleRename} 
+                                    onRename={handleRename}
                                     isExisting={file.isExisting}
-                                    />
+                                />
                             )}
                         </ul>
                     </DndContext>

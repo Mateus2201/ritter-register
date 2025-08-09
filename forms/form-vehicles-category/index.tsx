@@ -34,11 +34,13 @@ import Manufacturer from "@/types/Manufacturer";
 import VehicleCategory from "@/types/VehicleCategory";
 import { FormDataVehicleCategory } from "@/schema-forms/form-vehicle-category";
 import { useVehicleCategory } from "@/hooks/use-vehicle-category";
-import AlertDialogComponent from "@/components/alert";
+import { AlertDialogComponent } from "@/components/alert";
+import DialogType from "@/types/dialogs";
 
 export default function FormVehicleCategory() {
 	const [useVehicleCategoryData, setVehicleCategoryData] = useState<VehicleCategory[]>([]);
 	const [reload, serReload] = useState<boolean>(false);
+	const [propsRegister, setPropsRegister] = useState<DialogType>()
 
 	const { createVehicleCategory, getAllVehicleCategory, deleteVehicleCategory } = useVehicleCategory();
 
@@ -101,25 +103,38 @@ export default function FormVehicleCategory() {
 	const handleDelete = (VehicleCategory: VehicleCategory) => {
 		if (!VehicleCategory) return;
 
-		deleteVehicleCategory(VehicleCategory.idVehicleCategory)
-			.then(() => {
-				serReload(!reload);
-				toast("Categoria de veículo deletada com sucesso!", {
-					description: new Date().toLocaleDateString("pt-BR"),
-					action: {
-						label: "Fechar",
-						onClick: () => console.log("Undo"),
-					},
-				})
-			}).catch((error) => {
-				toast.error("Erro ao deletar categoria de veículo:", {
-					description: error,
-					action: {
-						label: "Fechar",
-						onClick: () => console.log("Undo"),
-					},
-				});
-			});
+		setPropsRegister({
+			title: 'Deseja excluir?',
+			description: `A Categoria de veículo ${VehicleCategory.description} pode estar sendo usada em outros veículos e gerar erros!`,
+			confirm: () => {
+				deleteVehicleCategory(VehicleCategory.idVehicleCategory)
+					.then(() => {
+						serReload(!reload);
+						toast("Categoria de veículo deletada com sucesso!", {
+							description: new Date().toLocaleDateString("pt-BR"),
+							action: {
+								label: "Fechar",
+								onClick: () => console.log("Undo"),
+							},
+						})
+						setPropsRegister({ ...propsRegister, open: false })
+					}).catch((error) => {
+						toast.error("Erro ao deletar categoria de veículo:", {
+							description: error,
+							action: {
+								label: "Fechar",
+								onClick: () => console.log("Undo"),
+							},
+						});
+					});
+			},
+			cancel: () => setPropsRegister({ ...propsRegister, open: false }),
+			cancelText: 'cancelar',
+			confirmText: 'excluir',
+			cancelButton: true,
+			confirmButton: true,
+			open: true
+		})
 	}
 
 	const MakeTableRow = () => {
@@ -131,7 +146,7 @@ export default function FormVehicleCategory() {
 				createdBy,
 				updatedAt,
 				updatedBy,
-			}: VehicleCategory) => (
+			}: VehicleCategory, index) => (
 				<TableRow key={idVehicleCategory}>
 					<TableCell className="hidden md:table-cell">{idVehicleCategory}</TableCell>
 					<TableCell>{description}</TableCell>
@@ -161,6 +176,7 @@ export default function FormVehicleCategory() {
 
 	return <Form {...useSetFormVehicleCategory}>
 		<Toaster />
+		<AlertDialogComponent {...propsRegister} />
 		<div className="w-full max-w-4xl mx-auto px-4 py-8 space-y-6">
 			<div className="text-center">
 				<h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">

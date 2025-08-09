@@ -1,19 +1,25 @@
 'use client'
 
-import { useState } from 'react'
-import publicApi from '@/lib/api'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import AlertDialogComponent from '@/components/alert'
-
 import { z } from "zod"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../ui/form'
+import Image from 'next/image'
+import { useState } from 'react'
+import logo from "@/public/logo.png";
 import DialogType from '@/types/dialogs'
 import { useAuth } from '@/hooks/use-auth'
-import { FormDataRegister } from '@/schema-forms/form-register'
 import { useRouter } from 'next/navigation'
-import Image from 'next/image'
-import logo from "@/public/logo.png";
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import { AlertDialogComponent } from '@/components/alert'
+import { FormDataRegister } from '@/schema-forms/form-register'
+
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage
+} from '../ui/form'
 
 interface RegisterComponentProps {
     children: React.ReactNode
@@ -23,7 +29,6 @@ export default function RegisterComponent({ children }: RegisterComponentProps) 
     const router = useRouter()
 
     const [loading, setLoading] = useState<boolean>(false)
-    const [useErros, setErros] = useState<string>('')
     const [propsRegister, setPropsRegister] = useState<DialogType>()
 
     const { schemaRegister, useSetFormRegister } = FormDataRegister()

@@ -9,13 +9,6 @@ import {
 } from "@/components/ui/form";
 
 import {
-	Card,
-	CardContent,
-	CardHeader,
-	CardTitle
-} from "@/components/ui/card";
-
-import {
 	Table,
 	TableBody,
 	TableCaption,
@@ -27,6 +20,7 @@ import {
 
 import { toast, Toaster } from "sonner";
 import { Plus, Trash2 } from "lucide-react";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import React, { useEffect, useState } from "react";
@@ -34,10 +28,13 @@ import Manufacturer from "@/types/Manufacturer";
 import { useManufacturer } from "@/hooks/use-manufacturer";
 import { FormDataManufacturer } from "@/schema-forms/form-manufacturer";
 import { error } from "console";
+import { AlertDialogComponent } from "@/components/alert";
+import DialogType from "@/types/dialogs";
 
 export default function FormManufacturer() {
 	const [useManufacturerData, setManufacturerData] = useState<Manufacturer[]>([]);
 	const [reload, serReload] = useState<boolean>(false);
+	const [propsRegister, setPropsRegister] = useState<DialogType>()
 
 	const { createManufacturer, getAllManufacturer, deleteManufacturer } = useManufacturer();
 
@@ -98,25 +95,38 @@ export default function FormManufacturer() {
 	const handleDelete = (Manufacturer: Manufacturer) => {
 		if (!Manufacturer) return;
 
-		deleteManufacturer(Manufacturer.idManufacturer)
-			.then(() => {
-				serReload(!reload);
-				toast("Fabricante deletado com sucesso!", {
-						description: new Date().toLocaleDateString("pt-BR"),
-						action: {
-							label: "Fechar",
-							onClick: () => console.log("Undo"),
-						},
-					})
-			}).catch((error) => {
-				toast.error("Erro ao deletar fabricante:", {
-					description: error,
-					action: {
-						label: "Fechar",
-						onClick: () => console.log("Undo"),
-					},
-				});
-			});
+		setPropsRegister({
+			title: 'Deseja excluir?',
+			description: `A Fabricante ${Manufacturer.name} pode estar sendo usada em outros veículos e gerar erros!`,
+			confirm: () => {
+				deleteManufacturer(Manufacturer.idManufacturer)
+					.then(() => {
+						serReload(!reload);
+						toast("Fabricante deletado com sucesso!", {
+							description: new Date().toLocaleDateString("pt-BR"),
+							action: {
+								label: "Fechar",
+								onClick: () => console.log("Undo"),
+							},
+						})
+						setPropsRegister({ ...propsRegister, open: false })
+					}).catch((error) => {
+						toast.error("Erro ao deletar fabricante:", {
+							description: error,
+							action: {
+								label: "Fechar",
+								onClick: () => console.log("Undo"),
+							},
+						});
+					});
+			},
+			cancel: () => setPropsRegister({ ...propsRegister, open: false }),
+			cancelText: 'cancelar',
+			confirmText: 'excluir',
+			cancelButton: true,
+			confirmButton: true,
+			open: true
+		})
 	}
 
 	const MakeTableRow = () => {
@@ -158,6 +168,7 @@ export default function FormManufacturer() {
 
 	return <Form {...useSetFormManufacturer}>
 		<Toaster />
+		<AlertDialogComponent {...propsRegister} />
 
 		<div className="w-full max-w-4xl mx-auto px-4 py-8 space-y-6">
 			<div className="text-center">

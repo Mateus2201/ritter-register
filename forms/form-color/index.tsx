@@ -102,7 +102,8 @@ export default function FormColor() {
 		setPropsRegister({
 			title: 'Deseja excluir?',
 			description: `A cor ${Color.description} pode estar sendo usada em outros veículos e gerar erros!`,
-			cancel: () => {
+			confirm: () => {
+
 				deleteColor(Color.idColor)
 					.then(() => {
 						serReload(!reload);
@@ -113,6 +114,7 @@ export default function FormColor() {
 								onClick: () => console.log("Undo"),
 							},
 						})
+						setPropsRegister({ ...propsRegister, open: false })
 					}).catch((error) => {
 						toast.error("Erro ao deletar cor:", {
 							description: error,
@@ -123,34 +125,13 @@ export default function FormColor() {
 						});
 					})
 			},
-			confirm: () => setPropsRegister({ ...propsRegister, open: false }),
+			cancel: () => setPropsRegister({ ...propsRegister, open: false }),
 			cancelText: 'cancelar',
 			confirmText: 'excluir',
 			cancelButton: true,
 			confirmButton: true,
 			open: true
 		})
-
-
-		// deleteColor(Color.idColor)
-		// 	.then(() => {
-		// 		serReload(!reload);
-		// 		toast("Cor deletada com sucesso!", {
-		// 			description: new Date().toLocaleDateString("pt-BR"),
-		// 			action: {
-		// 				label: "Fechar",
-		// 				onClick: () => console.log("Undo"),
-		// 			},
-		// 		})
-		// 	}).catch((error) => {
-		// 		toast.error("Erro ao deletar cor:", {
-		// 			description: error,
-		// 			action: {
-		// 				label: "Fechar",
-		// 				onClick: () => console.log("Undo"),
-		// 			},
-		// 		});
-		// 	});
 	}
 
 	useEffect(() => {

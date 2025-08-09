@@ -24,12 +24,14 @@ import {
 	SortableContext,
 	horizontalListSortingStrategy
 } from "@dnd-kit/sortable";
+import { AlertDialogComponent } from "@/components/alert";
+import DialogType from "@/types/dialogs";
 
 
 
 export default function FormConfig() {
 	const [selectedTab, setSelectedTab] = useState<string>("carousel");
-
+	const [propsRegister, setPropsRegister] = useState<DialogType>()
 	const [reloadImages, setReloadImages] = useState<boolean>(true);
 	const sensors = useSensors(useSensor(PointerSensor));
 	const [images, setImages] = useState<{
@@ -63,33 +65,49 @@ export default function FormConfig() {
 	};
 
 	const handleRemove = async (index: number) => {
-		const imageToDelete = images[index];
 
-		if (!imageToDelete) {
-			toast.error("Imagem não encontrada.");
-			return;
-		}
+		setPropsRegister({
+			title: 'Deseja excluir a foto?',
+			description: 'Excluindo essa imagem, não poderá ser revertida posteriormente',
+			confirm: async () => {
+				const imageToDelete = images[index];
 
-		if (!imageToDelete.isExisting) {
-			setImages(prev => prev.filter((_, i) => i !== index));
-			toast.success("Imagem removida com sucesso!");
-			return;
-		}
+				if (!imageToDelete) {
+					toast.error("Imagem não encontrada.");
+					return;
+				}
 
-		try {
-			await publicApi.delete("/site-image", {
-				data: {
-					publicId: imageToDelete.publicId,
-					folder: "registro-site",
-				},
-			});
+				if (!imageToDelete.isExisting) {
+					setImages(prev => prev.filter((_, i) => i !== index));
+					toast.success("Imagem removida com sucesso!");
+					setPropsRegister({ ...propsRegister, open: false })
+					return;
+				}
 
-			setImages(prev => prev.filter((_, i) => i !== index));
-			toast.success("Imagem removida com sucesso!");
-		} catch (error) {
-			console.error("Erro ao remover imagem:", error);
-			toast.error("Erro ao remover imagem.");
-		}
+				try {
+					await publicApi.delete("/site-image", {
+						data: {
+							publicId: imageToDelete.publicId,
+							folder: "registro-site",
+						},
+					});
+
+					setImages(prev => prev.filter((_, i) => i !== index));
+					toast.success("Imagem removida com sucesso!");
+					setPropsRegister({ ...propsRegister, open: false })
+				} catch (error) {
+					console.error("Erro ao remover imagem:", error);
+					toast.error("Erro ao remover imagem.");
+				}
+
+			},
+			cancel: () => setPropsRegister({ ...propsRegister, open: false }),
+			cancelText: 'cancelar',
+			confirmText: 'excluir',
+			cancelButton: true,
+			confirmButton: true,
+			open: true
+		})
 	};
 
 	const handleRename = (index: number, newName: string) => {
@@ -163,6 +181,8 @@ export default function FormConfig() {
 
 	return <div className="w-full max-w-4xl mx-auto px-4 py-8 space-y-6">
 		<Toaster />
+		<AlertDialogComponent {...propsRegister} />
+
 		<div className="text-center">
 			<h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
 				Configurações

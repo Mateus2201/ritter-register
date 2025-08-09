@@ -31,10 +31,13 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { AlertDialogComponent } from "@/components/alert";
+import DialogType from "@/types/dialogs";
 
 export default function FormOptional() {
 	const [useOptionalData, setOptionalData] = useState<Optional[]>([]);
 	const [reload, serReload] = useState<boolean>(false);
+	const [propsRegister, setPropsRegister] = useState<DialogType>()
 
 	const [useOptionalCategoryData, setOptionalCategoryData] = useState<OptionalCategory[]>([{
 		description: "Categoria Opcional",
@@ -125,25 +128,38 @@ export default function FormOptional() {
 	const handleDelete = (Optional: Optional) => {
 		if (!Optional) return;
 
-		deleteOptional(Optional.idOptional)
-			.then(() => {
-				serReload(!reload);
-				toast("Opcional deletado com sucesso!", {
-					description: new Date().toLocaleDateString("pt-BR"),
-					action: {
-						label: "Fechar",
-						onClick: () => console.log("Undo"),
-					},
-				})
-			}).catch((error) => {
-				toast.error("Erro ao deletar opcional:", {
-					description: error,
-					action: {
-						label: "Fechar",
-						onClick: () => console.log("Undo"),
-					},
-				});
-			});
+		setPropsRegister({
+			title: 'Deseja excluir?',
+			description: `O Opicional ${Optional.description} pode estar sendo usada em outros veículos e gerar erros!`,
+			confirm: () => {
+				deleteOptional(Optional.idOptional)
+					.then(() => {
+						serReload(!reload);
+						toast("Opcional deletado com sucesso!", {
+							description: new Date().toLocaleDateString("pt-BR"),
+							action: {
+								label: "Fechar",
+								onClick: () => console.log("Undo"),
+							},
+						})
+						setPropsRegister({ ...propsRegister, open: false })
+					}).catch((error) => {
+						toast.error("Erro ao deletar opcional:", {
+							description: error,
+							action: {
+								label: "Fechar",
+								onClick: () => console.log("Undo"),
+							},
+						});
+					});
+			},
+			cancel: () => setPropsRegister({ ...propsRegister, open: false }),
+			cancelText: 'cancelar',
+			confirmText: 'excluir',
+			cancelButton: true,
+			confirmButton: true,
+			open: true
+		})
 	}
 
 	const MakeTableRow = () => {
@@ -208,6 +224,7 @@ export default function FormOptional() {
 
 	return <Form {...useSetFormOptional}>
 		<Toaster />
+		<AlertDialogComponent {...propsRegister} />
 		<div className="w-full max-w-7xl mx-auto px-4 py-8 space-y-6">
 			<div className="text-center">
 				<h2 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
