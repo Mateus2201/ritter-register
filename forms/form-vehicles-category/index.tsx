@@ -162,7 +162,7 @@ export default function FormVehicleCategory() {
 						<Button
 							variant="ghost"
 							size="icon"
-							className="text-destructive hover:bg-destructive/10"
+							className="text-destructive hover:bg-gray-500"
 							onClick={() => handleDelete({ idVehicleCategory })}
 						>
 							<Trash2 className="w-4 h-4" />

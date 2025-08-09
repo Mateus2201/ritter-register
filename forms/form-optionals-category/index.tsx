@@ -175,7 +175,7 @@ export default function FormOptionalCategory() {
 						<Button
 							variant="ghost"
 							size="icon"
-							className="text-destructive hover:bg-destructive/10 flex-shrink-0"
+							className="text-destructive hover:bg-gray-500"
 							onClick={() =>
 								handleDelete({
 									idOptionalCategory,

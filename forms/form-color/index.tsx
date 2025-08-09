@@ -155,7 +155,7 @@ export default function FormColor() {
 					<Button
 						variant="ghost"
 						size="icon"
-						className="hover:bg-destructive/10 text-destructive"
+						className="text-destructive hover:bg-gray-500"
 						onClick={() => handleDelete({ idColor, description, createdAt, createdBy, updatedAt, updatedBy })}
 					>
 						<Trash2 className="w-4 h-4" />
