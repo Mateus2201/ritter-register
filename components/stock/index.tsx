@@ -1,5 +1,10 @@
 "use client";
 
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/scrollbar";
+
 import React, { useEffect, useState } from "react";
 import Vehicle from "@/types/Vehicle";
 import { useVehicle } from "@/hooks/use-vehicle";
@@ -8,11 +13,9 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SwiperImages from "@/components/swiper-images";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/scrollbar";
+import { Card, CardContent } from "../ui/card";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 import {
     Calendar1,
@@ -25,8 +28,9 @@ import {
 export default function Stock() {
     const [vehicles, setVehicles] = useState<Vehicle[]>([]);
     const [filteredVehicles, setFilteredVehicles] = useState<Vehicle[]>([]);
-    const [loader, setLoader] = useState(false);
-    const [tab, setTab] = useState("disponivel");
+    const [loader, setLoader] = useState<boolean>(false);
+    const [tab, setTab] = useState<string>("disponivel");
+    const [filterByName, setFilterByName] = useState<string>("");
     const { getAllVehicle } = useVehicle();
 
     useEffect(() => {
@@ -35,6 +39,11 @@ export default function Stock() {
             setFilteredVehicles(data);
         });
     }, []);
+
+    // const currentItems = useMemo(() => {
+    //     const start = pageIndex * itensForPages;
+    //     return allCars.slice(start, start + itensForPages);
+    // }, [allCars, pageIndex]);
 
     useEffect(() => {
         let filtered = vehicles;
@@ -45,7 +54,23 @@ export default function Stock() {
         if (tab === "disponivel") filtered = vehicles.filter(v => !v.sold);
 
         setFilteredVehicles(filtered);
-    }, [tab, vehicles]);
+
+        const handler = setTimeout(() => {
+            if (filterByName.trim() === "") {
+                setFilteredVehicles(filtered);
+            } else {
+                setFilteredVehicles(
+                    filtered.filter(vehicle =>
+                        vehicle.model.toLowerCase().includes(filterByName.toLowerCase())
+                    )
+                );
+            }
+        }, 300); // 300ms debounce
+
+        return () => {
+            clearTimeout(handler);
+        };
+    }, [tab, vehicles, filterByName]);
 
     return <div className="min-h-screen w-full bg-gradient-to-br from-gray-100 to-blue-50 py-10 px-6">
         <div className="max-w-7xl mx-auto">
@@ -62,6 +87,13 @@ export default function Stock() {
                     <TabsTrigger className="data-[state=active]:text-white w-full" value="vendidos">Vendidos</TabsTrigger>
                 </TabsList>
             </Tabs>
+
+            <Card className="my-5 ">
+                <CardContent className="grid gap-3 ">
+                    <Label>Busque pelo nome do carro:</Label>
+                    <Input type="text" value={filterByName} onChange={(e) => setFilterByName(e.target.value)} />
+                </CardContent>
+            </Card>
 
             {/* Grade de Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-8">
